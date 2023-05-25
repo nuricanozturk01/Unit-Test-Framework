@@ -4,8 +4,7 @@ import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@Repeatable(CsvSources.class)
-public @interface CsvSource
+public @interface CsvSources
 {
-    String value() default "";
+    CsvSource [] value();
 }
