@@ -3,7 +3,7 @@ package nuricanozturk.dev.engine;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestEngine
+public final class TestEngine
 {
     private final List<Class<?>> m_testClasses;
 
@@ -17,6 +17,7 @@ public class TestEngine
     {
         return null;
     }
+
     private void insertTestClasses()
     {
 
