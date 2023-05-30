@@ -1,27 +1,31 @@
 package nuricanozturk.dev.engine;
 
-import java.util.ArrayList;
+import nuricanozturk.dev.annotation.TestClass;
+
+import java.util.Arrays;
 import java.util.List;
 
-import static nuricanozturk.dev.engine.PackageScanner.getClasses;
+public final class TestEngine implements IEngine {
+    private final List<Class<?>> m_testClasses;
 
-public final class TestEngine
-{
-    private List<Class<?>> m_testClasses;
+    public TestEngine(List<Class<?>> annotatedClasses) {
+        m_testClasses = annotatedClasses;
+    }
 
-    public TestEngine()
-    {
-        m_testClasses = getClasses();
+    @Override
+    public void startTest() {
+        var annotatedClasses = decomposeHasTestClassAnnotationClasses();
 
     }
 
-    private List<Class<?>> getTesClassAnnotatedClasses()
-    {
-        return null;
+    @Override
+    public List<Class<?>> decomposeHasTestClassAnnotationClasses() {
+        return PackageScanner.getClasses().stream().filter(this::filter).toList();
     }
 
-    private void insertTestClasses()
-    {
-
+    private boolean filter(Class<?> cl) {
+        return Arrays.stream(cl.getDeclaredAnnotations())
+                .map(b -> b.annotationType().getSimpleName())
+                .anyMatch(a -> a.equals(TestClass.class.getSimpleName()));
     }
 }
