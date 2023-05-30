@@ -6,5 +6,4 @@ public interface IEngine {
 
     void startTest();
     List<Class<?>> decomposeHasTestClassAnnotationClasses();
-
 }

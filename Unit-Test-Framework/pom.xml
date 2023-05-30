@@ -7,11 +7,20 @@
     <groupId>nuricanozturk.dev</groupId>
     <artifactId>Unit-Test-Framework</artifactId>
     <version>1.0.0</version>
+    <description>Basic test framework for unit test</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <developers>
+        <developer>
+            <name>Nuri Can ÖZTÜRK</name>
+            <email>canozturk309@gmail.com</email>
+        </developer>
+    </developers>
+
 
 </project>

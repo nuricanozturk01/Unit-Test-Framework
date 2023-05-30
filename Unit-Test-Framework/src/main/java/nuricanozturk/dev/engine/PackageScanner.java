@@ -4,10 +4,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PackageScanner {
+public final class PackageScanner implements IPackageScanner {
+    public PackageScanner() {
+    }
 
-
-    private static List<String> getPackages(String directory) {
+    private List<String> getPackages(String directory) {
         var packageNames = new ArrayList<String>();
 
         try {
@@ -35,7 +36,8 @@ public class PackageScanner {
         return packageNames;
     }
 
-    public static List<Class<?>> getClasses() {
+    @Override
+    public List<Class<?>> getClasses() {
         var packages = getPackages("src/test_fw");
         var list = new ArrayList<Class<?>>();
 
