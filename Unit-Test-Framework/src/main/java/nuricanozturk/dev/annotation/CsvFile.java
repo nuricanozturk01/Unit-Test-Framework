@@ -1,11 +1,12 @@
 package nuricanozturk.dev.annotation;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@Repeatable(CsvFiles.class)
-public @interface CsvFile
-{
+public @interface CsvFile {
     String value() default "";
 }

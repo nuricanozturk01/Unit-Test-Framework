@@ -18,6 +18,10 @@ public class MethodWrapper {
         return annotations;
     }
 
+    public Method getMethod() {
+        return method;
+    }
+
     public void addAnnotation(Annotation annotation) {
         annotations.add(annotation);
     }

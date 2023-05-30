@@ -19,13 +19,21 @@ public final class TestRunner implements ITestRunner {
 
     @Override
     public void run(Class<?> $class) {
-        m_methodScanner.setClass($class);
-        m_methodScanner.prepare();
-        var testMessage = range(0, $class.getDeclaredMethods().length)
+        System.out.println("CLASS: " + $class.getSimpleName());
+        m_methodScanner.prepare($class);
+        System.out.println("size: " + m_methodScanner.getMethodLinkedList().size());
+        while (!m_methodScanner.getMethodLinkedList().isEmpty())
+        {
+            var method = m_methodScanner.getMethodLinkedList().removeFirst();
+            System.out.printf("%s -> ", method.getMethod().getName());
+        }
+        System.out.println("\n");
+        System.out.println("---------------");
+       /* var testMessage = range(0, $class.getDeclaredMethods().length)
                 .mapToObj(m_methodScanner::getNextMethod)
                 .map(m_methodRunner::run)
                 .toString();
 
-        m_displayEngine.display(testMessage);
+        m_displayEngine.display(testMessage);*/
     }
 }
