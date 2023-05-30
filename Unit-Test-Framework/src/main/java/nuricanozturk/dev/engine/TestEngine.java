@@ -3,13 +3,15 @@ package nuricanozturk.dev.engine;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nuricanozturk.dev.engine.PackageScanner.getClasses;
+
 public final class TestEngine
 {
-    private final List<Class<?>> m_testClasses;
+    private List<Class<?>> m_testClasses;
 
     public TestEngine()
     {
-        m_testClasses = new ArrayList<>();
+        m_testClasses = getClasses();
 
     }
 
