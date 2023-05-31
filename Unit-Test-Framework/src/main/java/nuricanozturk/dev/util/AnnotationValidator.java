@@ -24,26 +24,6 @@ public final class AnnotationValidator {
                 .anyMatch(name -> name.equals(annotation.getSimpleName()));
     }
 
-    private static boolean hasXAllOrEach(Method method, Class<? extends Annotation> $class) {
-        return !validateAnnotation(method, UnitTest.class) && validateAnnotation(method, $class);
-    }
-
-    public static boolean hasBeforeAllAnnotation(Method method) {
-        return hasXAllOrEach(method, BeforeAll.class);
-    }
-
-    public static boolean hasBeforeEachAnnotation(Method method) {
-        return hasXAllOrEach(method, BeforeEach.class);
-    }
-
-    public static boolean hasAfterAllAnnotation(Method method) {
-        return hasXAllOrEach(method, AfterAll.class);
-    }
-
-    public static boolean hasAfterEachAnnotation(Method method) {
-        return hasXAllOrEach(method, AfterEach.class);
-    }
-
     public static boolean isValidXAllOrEachAnnotations(Method method) {
         return !validateAnnotation(method, UnitTest.class) && (validateAnnotation(method, BeforeEach.class) ||
                 validateAnnotation(method, BeforeAll.class) || validateAnnotation(method, AfterAll.class) ||

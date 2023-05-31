@@ -1,6 +1,8 @@
 package nuricanozturk.dev.engine;
 
 import nuricanozturk.dev.annotation.*;
+import nuricanozturk.dev.util.MethodValidator;
+
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -107,7 +109,8 @@ public class MethodScanner {
     }
 
     public void prepare(Class<?> $class) {
-        var methodList = stream($class.getDeclaredMethods()).filter(m -> m.getDeclaredAnnotations().length != 0).toList();
+        var methodList = MethodValidator.validateMethods(stream($class.getDeclaredMethods()).toList());
+        //var methodList = stream($class.getDeclaredMethods()).filter(m -> m.getDeclaredAnnotations().length != 0).toList();
         currentClass = $class;
 
         var parameterizedMethods = getParameterizedMethods(methodList);
@@ -172,9 +175,8 @@ public class MethodScanner {
                 continue;
 
             var nameList = stream(annotations).map(a -> a.annotationType().getSimpleName()).toList();
-            if (isValidParameterForParam(method) && !nameList.contains(UNIT_TEST_ANNOTATION) && nameList.contains(PARAMETERIZED_TEST_ANNOTATION)
-                    && nameList.contains(DisplayName.class.getSimpleName()) &&
-                    nameList.contains(CSV_SOURCE_SINGLE) || nameList.contains(CSV_FILE)) {
+
+            if (validaParameterizedTestConditions(method, nameList)) {
                 var wrapper = new MethodWrapper(method);
                 wrapper.setParameterizedTest(true);
                 stream(annotations).forEach(wrapper::addAnnotation);
@@ -182,6 +184,13 @@ public class MethodScanner {
             }
         }
         return list;
+    }
+
+    private boolean validaParameterizedTestConditions(Method method, List<String> nameList) {
+        return isValidParameterForParam(method) && !nameList.contains(UNIT_TEST_ANNOTATION)
+                && nameList.contains(PARAMETERIZED_TEST_ANNOTATION)
+                && nameList.contains(DisplayName.class.getSimpleName())
+                && nameList.contains(CSV_SOURCE_SINGLE) || nameList.contains(CSV_FILE);
     }
 
     private boolean hasParameter(Method method) {

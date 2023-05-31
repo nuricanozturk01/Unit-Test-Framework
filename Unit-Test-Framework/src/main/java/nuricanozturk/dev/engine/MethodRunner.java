@@ -3,25 +3,24 @@ package nuricanozturk.dev.engine;
 import nuricanozturk.dev.annotation.CsvFile;
 import nuricanozturk.dev.annotation.CsvSource;
 import nuricanozturk.dev.annotation.DisplayName;
+import nuricanozturk.dev.exception.ParameterNotFoundException;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.stream.Stream;
 
 public class MethodRunner {
 
-    private final FieldParser m_fieldParser;
+    private final FileReader m_fileReader;
+    private Class<?> m_currentClass;
 
-    public MethodRunner(FieldParser m_fieldParser) {
-        this.m_fieldParser = m_fieldParser;
+    public MethodRunner(FileReader m_fileReader) {
+        this.m_fileReader = m_fileReader;
     }
 
     public String run(MethodWrapper method, Class<?> $class) {
-        m_fieldParser.set$class($class);
-        var displayName = "";
+        m_fileReader.set$class($class);
+        m_currentClass = $class;
+        var displayName = method.getMethod().getName();
         try {
             var displayNameAnnotation = method.getMethod().getAnnotation(DisplayName.class);
 
@@ -60,48 +59,36 @@ public class MethodRunner {
         var csvFile = realMethod.getAnnotation(CsvFile.class);
         var csvSource = realMethod.getAnnotation(CsvSource.class);
 
-        var paramType = realMethod.getParameterTypes()[0];
-
-        if (paramType == null)
-            return "";
-
         if (csvFile != null)
-            return getCsvFileDatas(csvFile, paramType);
+            return getCsvFileData(csvFile);
 
         else if (csvSource != null)
-            return getCsvSource(csvSource, paramType);
+            return getCsvSource(csvSource);
 
 
         return "";
     }
 
-    private String getCsvSource(CsvSource csvSource, Class<?> paramType) {
+    private String getCsvSource(CsvSource csvSource) {
         return csvSource.value();
     }
 
-    private String getCsvFileDatas(CsvFile csvFile, Class<?> paramType) {
-        var path = csvFile.value();
-        var filePath = Path.of(path);
-        var sb = new StringBuilder();
-        try (Stream<String> lines = Files.lines(filePath)) {
-            lines.map(line -> line.split("\\s+"))
-                    .map(words -> String.join(",", words))
-                    .forEach(sb::append);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return sb.toString();
+    private String getCsvFileData(CsvFile csvFile) {
+        return m_fileReader.readFileCsvFormat(csvFile);
     }
 
 
     private void runParameterizedTest(MethodWrapper method, Object constructor) {
         var realMethod = method.getMethod();
         var csvParameters = getParameters(realMethod).split(",");
+
         realMethod.setAccessible(true);
+
         var paramType = realMethod.getParameterTypes()[0];
 
         if (paramType == null)
-            return;
+            throw new ParameterNotFoundException("Parameter not found on " + realMethod.getName() + " on " + m_currentClass.getSimpleName());
+
         try {
             for (String source : csvParameters) {
                 var parameter = getParameterViaType(source, paramType);

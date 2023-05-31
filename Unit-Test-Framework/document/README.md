@@ -1,3 +1,4 @@
+### TRIGGER METHOD
 ```java
 @TestFrameworkApplication
 public class TestApplication {
