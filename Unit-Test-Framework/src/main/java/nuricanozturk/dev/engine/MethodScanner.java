@@ -14,7 +14,7 @@ import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-class MethodScanner implements IMethodScanner{
+class MethodScanner implements IMethodScanner {
     private final LinkedList<MethodWrapper> methodLinkedList;
 
     public MethodScanner() {
@@ -160,6 +160,7 @@ class MethodScanner implements IMethodScanner{
         }
         return list;
     }
+
     public MethodWrapper getNextMethod(int i) {
         return methodLinkedList.removeFirst();
     }

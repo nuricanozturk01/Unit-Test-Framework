@@ -30,6 +30,7 @@ public final class TestEngine implements IEngine {
 
         return annotatedClasses;
     }
+
     public static class Builder {
         private final TestEngine m_testEngine;
 
