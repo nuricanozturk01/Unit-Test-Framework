@@ -53,10 +53,10 @@ class MethodRunner implements IMethodRunner{
         realMethod.setAccessible(true);
         handleException(() -> realMethod.invoke(constructor),
                 ((ConsoleDisplay)m_displayEngine).getFailText(displayName + " test was failed..."),
-                FailedTestException.class,
+                RuntimeException.class,
                 () -> {
                     realMethod.setAccessible(false);
-                    m_displayEngine.displaySuccess(displayName + " tes success!..");
+                    //m_displayEngine.displaySuccess(displayName + " tes success!..");
                 });
     }
 

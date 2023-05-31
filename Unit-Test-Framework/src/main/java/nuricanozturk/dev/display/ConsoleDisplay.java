@@ -1,6 +1,6 @@
 package nuricanozturk.dev.display;
 
-public class ConsoleDisplay implements IDisplayEngine {
+public final class ConsoleDisplay implements IDisplayEngine {
     //Output background colour codes
     public static final String normalBackground = "\u001B[0m";
     public static final String blackBackground = "\u001B[40m";

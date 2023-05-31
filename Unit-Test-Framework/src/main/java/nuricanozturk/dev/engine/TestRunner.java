@@ -6,7 +6,6 @@ import nuricanozturk.dev.display.IDisplayEngine;
 import java.util.stream.Collectors;
 
 import static java.util.stream.IntStream.range;
-import static nuricanozturk.dev.display.DisplayEngineFactory.createDisplay;
 
 public final class TestRunner implements ITestRunner {
     private final IDisplayEngine m_displayEngine;
@@ -14,7 +13,7 @@ public final class TestRunner implements ITestRunner {
     private final MethodScanner m_methodScanner;
 
     public TestRunner(DisplayType displayType) {
-        m_displayEngine = createDisplay(displayType);
+        m_displayEngine = IDisplayEngine.getInstance(displayType);
         m_methodScanner = new MethodScanner();
         m_methodRunner = new MethodRunner(new FileReader(), m_displayEngine);
     }

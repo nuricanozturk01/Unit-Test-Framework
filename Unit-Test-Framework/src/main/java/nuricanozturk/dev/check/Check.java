@@ -1,5 +1,8 @@
 package nuricanozturk.dev.check;
 
+import nuricanozturk.dev.display.IDisplayEngine;
+import nuricanozturk.dev.exception.FailedTestException;
+
 import java.util.Collection;
 
 public final class Check {
@@ -8,8 +11,15 @@ public final class Check {
         throw new UnsupportedOperationException("TODO: ");
     }
 
-    public static boolean checkEqual(int expected, int actual) {
-        return expected == actual;
+    public static void checkEqual(int expected, int actual) {
+        try {
+            if (expected != actual)
+                throw new FailedTestException("NOT SUCCESS TEST");
+            IDisplayEngine.getInstance().displaySuccess("SUCCESS TEST!");
+        } catch (FailedTestException ex) {
+            IDisplayEngine.getInstance().displayFail(ex.getMessage());
+            throw new RuntimeException(ex.getMessage());
+        }
     }
 
     public static void checkEqual(boolean expected, boolean actual) {
