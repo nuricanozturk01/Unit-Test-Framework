@@ -4,17 +4,38 @@ import nuricanozturk.dev.annotation.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
+/*
+    AfterXX and BeforeXX methods has maximum 2 annotation (extra DisplayName) (max 2)
+    UniTest and Display name used single or together (unit test max 2)
+    ParamTests must use with  CsvSource, CsvSources or CsvFile and if you want Display Name (max 3)
+ */
 public class MethodScanner {
+    private final List<Optional<MethodWrapper>> m_unitTestMethods;
+    private final List<Optional<MethodWrapper>> m_paramTestMethods;
+    private final String UNIT_TEST_ANNOTATION = UnitTest.class.getSimpleName();
+    private final String PARAMETERIZED_TEST_ANNOTATION = ParameterizedTest.class.getSimpleName();
+    private final String CSV_SOURCE_SINGLE = CsvSource.class.getSimpleName();
+    private final String CSV_SOURCE_MULTIPLE = CsvSources.class.getSimpleName();
+    private final String CSV_FILE = CsvFile.class.getSimpleName();
     private final LinkedList<MethodWrapper> methodLinkedList;
+    private Optional<MethodWrapper> m_beforeEachMethod = empty();
+    private Optional<MethodWrapper> m_afterEachMethod = empty();
+    private Optional<MethodWrapper> m_beforeAllMethod = empty();
+    private Optional<MethodWrapper> m_afterAllMethod = empty();
     private Class<?> currentClass;
 
     public MethodScanner() {
+        m_unitTestMethods = new ArrayList<>();
+        m_paramTestMethods = new ArrayList<>();
         methodLinkedList = new LinkedList<>();
     }
 
@@ -22,8 +43,73 @@ public class MethodScanner {
         return methodLinkedList;
     }
 
+    public void prepareAgain(Class<?> $class) {
+        currentClass = $class;
+        var methodList = stream(currentClass.getDeclaredMethods()).toList();
+
+        methodList.forEach(this::decomposeMethods);
+    }
+
+    private void decomposeMethods(Method method) {
+        if (method.getDeclaredAnnotations().length == 0)
+            return;
+
+        if (method.getDeclaredAnnotations().length == 1)
+            insertOnlyOneAnnotations(method);
+
+        else insertTwoOrMoreAnnotations(method);
+    }
+
+    private void insertTwoOrMoreAnnotations(Method method) {
+        var wrapper = new MethodWrapper(method);
+
+        for (var annotation : method.getDeclaredAnnotations()) {
+
+            var name = annotation.annotationType().getSimpleName();
+
+            if (name.equals(DisplayName.class.getSimpleName()))
+                wrapper.addAnnotation(annotation);
+            var nameList = wrapper.getAnnotations().stream().map(a -> a.annotationType().getSimpleName()).toList();
+
+            if (name.equals(UNIT_TEST_ANNOTATION) && (!nameList.contains(PARAMETERIZED_TEST_ANNOTATION) ||
+                    !nameList.contains(CSV_SOURCE_SINGLE) || !nameList.contains(CSV_SOURCE_MULTIPLE) ||
+                    !nameList.contains(CSV_FILE)))
+                wrapper.addAnnotation(annotation);
+
+            if (name.equals(PARAMETERIZED_TEST_ANNOTATION) && !nameList.contains(UNIT_TEST_ANNOTATION))
+                wrapper.addAnnotation(annotation);
+        }
+
+
+    }
+
+    private void insertOnlyOneAnnotations(Method method) {
+        var annotation = method.getDeclaredAnnotations()[0];
+        var name = annotation.annotationType().getSimpleName();
+
+        if (name.equals(DisplayName.class.getSimpleName())) {
+            return;
+        } else if (name.equals(BeforeEach.class.getSimpleName())) {
+            m_beforeEachMethod = of(new MethodWrapper(method));
+            m_beforeEachMethod.get().addAnnotation(annotation);
+        } else if (name.equals(BeforeAll.class.getSimpleName())) {
+            m_beforeAllMethod = of(new MethodWrapper(method));
+            m_beforeAllMethod.get().addAnnotation(annotation);
+        } else if (name.equals(AfterEach.class.getSimpleName())) {
+            m_afterEachMethod = of(new MethodWrapper(method));
+            m_afterEachMethod.get().addAnnotation(annotation);
+        } else if (name.equals(AfterAll.class.getSimpleName())) {
+            m_afterAllMethod = of(new MethodWrapper(method));
+            m_afterAllMethod.get().addAnnotation(annotation);
+        } else if (name.equals(UNIT_TEST_ANNOTATION)) {
+            var unitTestMethod = new MethodWrapper(method);
+            unitTestMethod.addAnnotation(annotation);
+            m_unitTestMethods.add(of(unitTestMethod));
+        }
+    }
+
     public void prepare(Class<?> $class) {
-        var methodList = stream($class.getDeclaredMethods()).toList();
+        var methodList = stream($class.getDeclaredMethods()).filter(m -> m.getDeclaredAnnotations().length != 0).toList();
         currentClass = $class;
 
         var parameterizedMethods = getParameterizedMethods(methodList);
@@ -33,16 +119,15 @@ public class MethodScanner {
         var afterEachMethod = getAfterEachMethod(methodList);
         var afterAllMethod = getAfterAllMethod(methodList);
 
-
         beforeAllMethod.ifPresent(methodLinkedList::addFirst);
 
         if (!parameterizedMethods.isEmpty())
             loadParameterizedTest(beforeEachMethod, afterEachMethod, parameterizedMethods);
+
         if (!unitTestMethods.isEmpty())
             loadUnitTest(beforeEachMethod, afterEachMethod, unitTestMethods);
-        afterAllMethod.ifPresent(methodLinkedList::addLast);
 
-        System.out.println("SIZE: " + methodLinkedList.size());
+        afterAllMethod.ifPresent(methodLinkedList::addLast);
     }
 
     private void loadUnitTest(Optional<MethodWrapper> beforeEachMethod, Optional<MethodWrapper> afterEachMethod, List<Optional<MethodWrapper>> unitTestMethods) {
@@ -80,26 +165,22 @@ public class MethodScanner {
     }
 
     private List<Optional<MethodWrapper>> getParameterizedMethods(List<Method> methodList) {
-        System.out.println("FFFFFFF");
         var list = new ArrayList<Optional<MethodWrapper>>();
-
-        var param = ParameterizedTest.class.getSimpleName();
-        var csvSingle = CsvSource.class.getSimpleName();
-        var csvMultiple = CsvSources.class.getSimpleName();
 
         for (var method : methodList) {
             var annotations = method.getDeclaredAnnotations();
 
             if (annotations.length < 2)
-                return Collections.emptyList();
+                continue;
 
             var nameList = stream(annotations).map(a -> a.annotationType().getSimpleName()).toList();
-            if (!nameList.contains(UnitTest.class.getSimpleName()))
-                if (isValidParameterForParam(method) && nameList.contains(param) && (nameList.contains(csvSingle) || nameList.contains(csvMultiple))) {
-                    var wrapper = new MethodWrapper(method);
-                    stream(annotations).forEach(wrapper::addAnnotation);
-                    list.add(of(wrapper));
-                }
+            if (isValidParameterForParam(method) && !nameList.contains(UNIT_TEST_ANNOTATION) && nameList.contains(PARAMETERIZED_TEST_ANNOTATION)
+                    && nameList.contains(DisplayName.class.getSimpleName()) &&
+                    nameList.contains(CSV_SOURCE_SINGLE) || nameList.contains(CSV_SOURCE_MULTIPLE)) {
+                var wrapper = new MethodWrapper(method);
+                stream(annotations).forEach(wrapper::addAnnotation);
+                list.add(of(wrapper));
+            }
         }
         return list;
     }
@@ -130,21 +211,17 @@ public class MethodScanner {
     private List<Optional<MethodWrapper>> prepareUnitTests(List<Method> methodList) {
         var list = new ArrayList<Optional<MethodWrapper>>();
 
-        var unit = UnitTest.class.getSimpleName();
-        var csvSingle = CsvSource.class.getSimpleName();
-        var csvMultiple = CsvSources.class.getSimpleName();
-
         for (var method : methodList) {
             var annotations = method.getDeclaredAnnotations();
 
-
             var nameList = stream(annotations).map(a -> a.annotationType().getSimpleName()).toList();
-            if (!nameList.contains(ParameterizedTest.class.getSimpleName()))
-                if (!hasParameter(method) && nameList.contains(unit) && !nameList.contains(csvSingle) && !nameList.contains(csvMultiple)) {
-                    var wrapper = new MethodWrapper(method);
-                    stream(annotations).forEach(wrapper::addAnnotation);
-                    list.add(of(wrapper));
-                }
+
+            if (!nameList.contains(PARAMETERIZED_TEST_ANNOTATION) && !hasParameter(method) && nameList.contains(UNIT_TEST_ANNOTATION) &&
+                    !nameList.contains(CSV_SOURCE_SINGLE) && !nameList.contains(CSV_SOURCE_MULTIPLE)) {
+                var wrapper = new MethodWrapper(method);
+                stream(annotations).forEach(wrapper::addAnnotation);
+                list.add(of(wrapper));
+            }
         }
         return list;
     }
