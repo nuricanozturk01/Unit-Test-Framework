@@ -24,7 +24,6 @@ public class MethodScanner {
     private final String UNIT_TEST_ANNOTATION = UnitTest.class.getSimpleName();
     private final String PARAMETERIZED_TEST_ANNOTATION = ParameterizedTest.class.getSimpleName();
     private final String CSV_SOURCE_SINGLE = CsvSource.class.getSimpleName();
-    private final String CSV_SOURCE_MULTIPLE = CsvSources.class.getSimpleName();
     private final String CSV_FILE = CsvFile.class.getSimpleName();
     private final LinkedList<MethodWrapper> methodLinkedList;
     private Optional<MethodWrapper> m_beforeEachMethod = empty();
@@ -72,8 +71,7 @@ public class MethodScanner {
             var nameList = wrapper.getAnnotations().stream().map(a -> a.annotationType().getSimpleName()).toList();
 
             if (name.equals(UNIT_TEST_ANNOTATION) && (!nameList.contains(PARAMETERIZED_TEST_ANNOTATION) ||
-                    !nameList.contains(CSV_SOURCE_SINGLE) || !nameList.contains(CSV_SOURCE_MULTIPLE) ||
-                    !nameList.contains(CSV_FILE)))
+                    !nameList.contains(CSV_SOURCE_SINGLE) || !nameList.contains(CSV_FILE)))
                 wrapper.addAnnotation(annotation);
 
             if (name.equals(PARAMETERIZED_TEST_ANNOTATION) && !nameList.contains(UNIT_TEST_ANNOTATION))
@@ -176,8 +174,9 @@ public class MethodScanner {
             var nameList = stream(annotations).map(a -> a.annotationType().getSimpleName()).toList();
             if (isValidParameterForParam(method) && !nameList.contains(UNIT_TEST_ANNOTATION) && nameList.contains(PARAMETERIZED_TEST_ANNOTATION)
                     && nameList.contains(DisplayName.class.getSimpleName()) &&
-                    nameList.contains(CSV_SOURCE_SINGLE) || nameList.contains(CSV_SOURCE_MULTIPLE)) {
+                    nameList.contains(CSV_SOURCE_SINGLE) || nameList.contains(CSV_FILE)) {
                 var wrapper = new MethodWrapper(method);
+                wrapper.setParameterizedTest(true);
                 stream(annotations).forEach(wrapper::addAnnotation);
                 list.add(of(wrapper));
             }
@@ -190,7 +189,7 @@ public class MethodScanner {
     }
 
     private boolean isValidParameterForParam(Method method) {
-        return method.getParameterCount() == 1 && method.getParameterTypes()[0].getSimpleName().equals(String.class.getSimpleName());
+        return method.getParameterCount() == 1;
     }
 
 
@@ -217,7 +216,7 @@ public class MethodScanner {
             var nameList = stream(annotations).map(a -> a.annotationType().getSimpleName()).toList();
 
             if (!nameList.contains(PARAMETERIZED_TEST_ANNOTATION) && !hasParameter(method) && nameList.contains(UNIT_TEST_ANNOTATION) &&
-                    !nameList.contains(CSV_SOURCE_SINGLE) && !nameList.contains(CSV_SOURCE_MULTIPLE)) {
+                    !nameList.contains(CSV_SOURCE_SINGLE)) {
                 var wrapper = new MethodWrapper(method);
                 stream(annotations).forEach(wrapper::addAnnotation);
                 list.add(of(wrapper));

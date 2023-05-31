@@ -1,8 +1,5 @@
 package nuricanozturk.dev;
 
-import nuricanozturk.dev.annotation.CsvSource;
-import nuricanozturk.dev.annotation.CsvSources;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +20,6 @@ public class Main
         }
     }
 
-    @CsvSources({
-            @CsvSource("a.txt"),
-            @CsvSource("b.txt")
-    })
     public static List<String> getSubPackages(String packageName)
     {
         List<String> packageNames = new ArrayList<>();
