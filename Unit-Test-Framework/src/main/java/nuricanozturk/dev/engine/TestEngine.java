@@ -32,7 +32,6 @@ public final class TestEngine implements IEngine {
                 .map(b -> b.annotationType().getSimpleName())
                 .anyMatch(a -> a.equals(TestClass.class.getSimpleName()));
     }
-
     public static class Builder {
         private final TestEngine m_testEngine;
 

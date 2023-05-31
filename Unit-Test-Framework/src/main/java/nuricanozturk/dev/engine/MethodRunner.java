@@ -11,7 +11,7 @@ import static java.util.Arrays.stream;
 import static nuricanozturk.dev.util.ExceptionUtil.handleException;
 import static nuricanozturk.dev.util.ParameterConverter.parseParameterByType;
 
-public class MethodRunner {
+public class MethodRunner implements IMethodRunner{
 
     private final FileReader m_fileReader;
     private Class<?> m_currentClass;
@@ -20,6 +20,7 @@ public class MethodRunner {
         this.m_fileReader = m_fileReader;
     }
 
+    @Override
     public String run(MethodWrapper method, Class<?> $class) {
         m_fileReader.set$class($class);
         m_currentClass = $class;

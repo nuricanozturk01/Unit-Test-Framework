@@ -14,7 +14,7 @@ import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public class MethodScanner {
+public class MethodScanner implements IMethodScanner{
     private final LinkedList<MethodWrapper> methodLinkedList;
 
     public MethodScanner() {
@@ -26,7 +26,8 @@ public class MethodScanner {
     }
 
 
-    public void prepare(Class<?> $class) {
+    @Override
+    public void prepareMethodsForTest(Class<?> $class) {
         var methodList = MethodValidator.validateMethods(stream($class.getDeclaredMethods()).toList());
 
         var parameterizedMethods = getParameterizedMethods(methodList);
@@ -159,7 +160,6 @@ public class MethodScanner {
         }
         return list;
     }
-
     public MethodWrapper getNextMethod(int i) {
         return methodLinkedList.removeFirst();
     }

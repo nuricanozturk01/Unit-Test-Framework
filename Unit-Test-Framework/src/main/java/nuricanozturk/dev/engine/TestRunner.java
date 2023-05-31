@@ -10,7 +10,7 @@ import static nuricanozturk.dev.display.DisplayEngineFactory.createDisplay;
 
 public final class TestRunner implements ITestRunner {
     private final IDisplayEngine m_displayEngine;
-    private final MethodRunner m_methodRunner;
+    private final IMethodRunner m_methodRunner;
     private final MethodScanner m_methodScanner;
 
     public TestRunner(DisplayType displayType) {
@@ -33,7 +33,7 @@ public final class TestRunner implements ITestRunner {
     @Override
     public void run(Class<?> $class) {
 
-        m_methodScanner.prepare($class);
+        m_methodScanner.prepareMethodsForTest($class);
         // test($class);
         var testMessage = range(0, m_methodScanner.getMethodLinkedList().size())
                 .mapToObj(m_methodScanner::getNextMethod)
