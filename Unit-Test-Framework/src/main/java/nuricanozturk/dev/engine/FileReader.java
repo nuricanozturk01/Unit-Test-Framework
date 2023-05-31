@@ -6,13 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class FileReader {
-    private Class<?> $class;
-
-    public void set$class(Class<?> $class) {
-        this.$class = $class;
-    }
-
+class FileReader {
     public String readFileCsvFormat(CsvFile csvFile) {
         var path = csvFile.value();
         var filePath = Path.of(path);

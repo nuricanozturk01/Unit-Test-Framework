@@ -7,11 +7,11 @@ import nuricanozturk.dev.engine.TestEngine;
 import nuricanozturk.dev.engine.TestRunner;
 import nuricanozturk.dev.exception.TriggerClassNotFoundException;
 
-import static nuricanozturk.dev.util.AnnotationValidator.validateAnnotation;
+import static nuricanozturk.dev.util.validator.AnnotationValidator.validateAnnotation;
 
 public final class TestFrameworkApp {
-    private TestFrameworkApp() {}
-
+    private TestFrameworkApp() {
+    }
     public static void run(Class<?> $class, DisplayType displayType) {
 
         if (!validateAnnotation($class, TestFrameworkApplication.class))

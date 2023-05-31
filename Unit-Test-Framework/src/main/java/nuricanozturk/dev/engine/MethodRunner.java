@@ -3,26 +3,30 @@ package nuricanozturk.dev.engine;
 import nuricanozturk.dev.annotation.CsvFile;
 import nuricanozturk.dev.annotation.CsvSource;
 import nuricanozturk.dev.annotation.DisplayName;
+import nuricanozturk.dev.display.ConsoleDisplay;
+import nuricanozturk.dev.display.IDisplayEngine;
+import nuricanozturk.dev.exception.FailedTestException;
 import nuricanozturk.dev.exception.SourceNotFoundException;
 
 import java.lang.reflect.Method;
 
 import static java.util.Arrays.stream;
-import static nuricanozturk.dev.util.ExceptionUtil.handleException;
+import static nuricanozturk.dev.util.exception.ExceptionUtil.handleException;
 import static nuricanozturk.dev.util.ParameterConverter.parseParameterByType;
 
-public class MethodRunner implements IMethodRunner{
+class MethodRunner implements IMethodRunner{
 
     private final FileReader m_fileReader;
     private Class<?> m_currentClass;
+    private final IDisplayEngine m_displayEngine;
 
-    public MethodRunner(FileReader m_fileReader) {
+    public MethodRunner(FileReader m_fileReader, IDisplayEngine displayEngine) {
         this.m_fileReader = m_fileReader;
+        m_displayEngine = displayEngine;
     }
 
     @Override
     public String run(MethodWrapper method, Class<?> $class) {
-        m_fileReader.set$class($class);
         m_currentClass = $class;
 
         var displayName = method.getMethod().getName();
@@ -38,16 +42,27 @@ public class MethodRunner implements IMethodRunner{
         if (method.isParameterizedTest())
             runParameterizedTest(method, ctor);
 
-        else runUnitTest(method, ctor);
+        else runUnitTest(method, ctor, displayName);
 
         return displayName + " named method was runned!\n";
     }
 
 
-    private void runUnitTest(MethodWrapper method, Object constructor) {
+    private void runUnitTest(MethodWrapper method, Object constructor, String displayName) {
         var realMethod = method.getMethod();
         realMethod.setAccessible(true);
-        handleException(() -> realMethod.invoke(constructor), m_currentClass.getSimpleName() +" - " +realMethod.getName() + " " + "Something wrong calling method! Should not have parameters!...", RuntimeException.class, () -> realMethod.setAccessible(false));
+        handleException(() -> realMethod.invoke(constructor),
+                ((ConsoleDisplay)m_displayEngine).getFailText(displayName + " test was failed..."),
+                FailedTestException.class,
+                () -> {
+                    realMethod.setAccessible(false);
+                    m_displayEngine.displaySuccess(displayName + " tes success!..");
+                });
+    }
+
+    private void runUnitTest(Method realMethod, String displayName) {
+        realMethod.setAccessible(false);
+        m_displayEngine.displaySuccess(displayName + " test was success!");
     }
 
     private void runParameterizedTest(MethodWrapper method, Object constructor) {
@@ -68,11 +83,14 @@ public class MethodRunner implements IMethodRunner{
         var csvFile = realMethod.getAnnotation(CsvFile.class);
         var csvSource = realMethod.getAnnotation(CsvSource.class);
 
-        if (csvFile != null)
-            return m_fileReader.readFileCsvFormat(csvFile);
 
-        else if (csvSource != null)
-            return csvSource.value();
+        if (csvFile != null)
+            if (!csvFile.value().isEmpty() && !csvFile.value().isBlank())
+                return m_fileReader.readFileCsvFormat(csvFile);
+
+        if (csvSource != null)
+            if (!csvSource.value().isEmpty() && !csvSource.value().isBlank())
+                return csvSource.value();
 
         throw new SourceNotFoundException("Source not found!...");
     }

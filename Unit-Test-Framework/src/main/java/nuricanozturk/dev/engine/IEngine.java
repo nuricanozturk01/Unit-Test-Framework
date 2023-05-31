@@ -2,7 +2,7 @@ package nuricanozturk.dev.engine;
 
 import java.util.List;
 
-public interface IEngine {
+interface IEngine {
 
     void startTest();
     List<Class<?>> decomposeHasTestClassAnnotationClasses();

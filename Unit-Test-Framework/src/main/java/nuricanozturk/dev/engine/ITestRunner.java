@@ -1,6 +1,6 @@
 package nuricanozturk.dev.engine;
 
 @FunctionalInterface
-public interface ITestRunner {
+interface ITestRunner {
     void run(Class<?> $class);
 }

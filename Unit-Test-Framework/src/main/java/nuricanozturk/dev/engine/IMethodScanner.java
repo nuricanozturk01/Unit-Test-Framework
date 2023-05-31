@@ -1,6 +1,6 @@
 package nuricanozturk.dev.engine;
 
 @FunctionalInterface
-public interface IMethodScanner {
+interface IMethodScanner {
     void prepareMethodsForTest(Class<?> $class);
 }

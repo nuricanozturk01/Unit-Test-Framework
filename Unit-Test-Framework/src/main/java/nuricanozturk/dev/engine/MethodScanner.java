@@ -1,7 +1,7 @@
 package nuricanozturk.dev.engine;
 
 import nuricanozturk.dev.annotation.*;
-import nuricanozturk.dev.util.MethodValidator;
+import nuricanozturk.dev.util.validator.MethodValidator;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -14,7 +14,7 @@ import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public class MethodScanner implements IMethodScanner{
+class MethodScanner implements IMethodScanner{
     private final LinkedList<MethodWrapper> methodLinkedList;
 
     public MethodScanner() {

@@ -1,6 +1,8 @@
 package nuricanozturk.dev.display;
 
-@FunctionalInterface
+
 public interface IDisplayEngine {
-    void display(String msg);
+    void displaySuccess(String msg);
+
+    void displayFail(String msg);
 }

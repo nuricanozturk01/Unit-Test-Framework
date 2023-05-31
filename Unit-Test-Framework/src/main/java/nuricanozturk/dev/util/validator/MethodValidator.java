@@ -1,4 +1,4 @@
-package nuricanozturk.dev.util;
+package nuricanozturk.dev.util.validator;
 
 import nuricanozturk.dev.annotation.*;
 

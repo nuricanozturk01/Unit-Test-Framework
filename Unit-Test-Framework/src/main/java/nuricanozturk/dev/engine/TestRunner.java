@@ -16,10 +16,10 @@ public final class TestRunner implements ITestRunner {
     public TestRunner(DisplayType displayType) {
         m_displayEngine = createDisplay(displayType);
         m_methodScanner = new MethodScanner();
-        m_methodRunner = new MethodRunner(new FileReader());
+        m_methodRunner = new MethodRunner(new FileReader(), m_displayEngine);
     }
 
-    public void test(Class<?> $class) {
+    /*public void test(Class<?> $class) {
         System.out.println("CLASS: " + $class.getSimpleName());
         System.out.println("size: " + m_methodScanner.getMethodLinkedList().size());
         while (!m_methodScanner.getMethodLinkedList().isEmpty()) {
@@ -28,7 +28,7 @@ public final class TestRunner implements ITestRunner {
         }
         System.out.println("\n");
         System.out.println("---------------");
-    }
+    }*/
 
     @Override
     public void run(Class<?> $class) {
