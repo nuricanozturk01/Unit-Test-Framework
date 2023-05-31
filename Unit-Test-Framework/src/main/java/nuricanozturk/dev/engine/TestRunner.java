@@ -34,7 +34,7 @@ public final class TestRunner implements ITestRunner {
     public void run(Class<?> $class) {
 
         m_methodScanner.prepare($class);
-        //test($class);
+        // test($class);
         var testMessage = range(0, m_methodScanner.getMethodLinkedList().size())
                 .mapToObj(m_methodScanner::getNextMethod)
                 .map(mw -> m_methodRunner.run(mw, $class))

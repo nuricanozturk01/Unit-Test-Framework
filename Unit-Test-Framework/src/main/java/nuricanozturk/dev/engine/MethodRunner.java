@@ -3,10 +3,13 @@ package nuricanozturk.dev.engine;
 import nuricanozturk.dev.annotation.CsvFile;
 import nuricanozturk.dev.annotation.CsvSource;
 import nuricanozturk.dev.annotation.DisplayName;
-import nuricanozturk.dev.exception.ParameterNotFoundException;
+import nuricanozturk.dev.exception.SourceNotFoundException;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import static java.util.Arrays.stream;
+import static nuricanozturk.dev.util.ExceptionUtil.handleException;
+import static nuricanozturk.dev.util.ParameterConverter.parseParameterByType;
 
 public class MethodRunner {
 
@@ -20,63 +23,31 @@ public class MethodRunner {
     public String run(MethodWrapper method, Class<?> $class) {
         m_fileReader.set$class($class);
         m_currentClass = $class;
+
         var displayName = method.getMethod().getName();
-        try {
-            var displayNameAnnotation = method.getMethod().getAnnotation(DisplayName.class);
+        var displayNameAnnotation = method.getMethod().getAnnotation(DisplayName.class);
 
-            if (displayNameAnnotation != null) {
-                var value = displayNameAnnotation.value();
-                displayName = value.isBlank() || value.isEmpty() ? displayName : value;
-            }
-
-            var constructor = $class.getDeclaredConstructor().newInstance();
-
-            if (method.isParameterizedTest())
-                runParameterizedTest(method, constructor);
-
-            else runUnitTest(method, constructor);
-
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            throw new RuntimeException(e);
+        if (displayNameAnnotation != null) {
+            var value = displayNameAnnotation.value();
+            displayName = value.isBlank() || value.isEmpty() ? displayName : value;
         }
+
+        var ctor = handleException(() -> $class.getDeclaredConstructor().newInstance(), "Please be sure use default ctor!...", RuntimeException.class);
+
+        if (method.isParameterizedTest())
+            runParameterizedTest(method, ctor);
+
+        else runUnitTest(method, ctor);
+
         return displayName + " named method was runned!\n";
     }
+
 
     private void runUnitTest(MethodWrapper method, Object constructor) {
         var realMethod = method.getMethod();
         realMethod.setAccessible(true);
-        try {
-            realMethod.invoke(constructor);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } finally {
-            realMethod.setAccessible(false);
-        }
+        handleException(() -> realMethod.invoke(constructor), m_currentClass.getSimpleName() +" - " +realMethod.getName() + " " + "Something wrong calling method! Should not have parameters!...", RuntimeException.class, () -> realMethod.setAccessible(false));
     }
-
-    private String getParameters(Method realMethod) {
-        var csvFile = realMethod.getAnnotation(CsvFile.class);
-        var csvSource = realMethod.getAnnotation(CsvSource.class);
-
-        if (csvFile != null)
-            return getCsvFileData(csvFile);
-
-        else if (csvSource != null)
-            return getCsvSource(csvSource);
-
-
-        return "";
-    }
-
-    private String getCsvSource(CsvSource csvSource) {
-        return csvSource.value();
-    }
-
-    private String getCsvFileData(CsvFile csvFile) {
-        return m_fileReader.readFileCsvFormat(csvFile);
-    }
-
 
     private void runParameterizedTest(MethodWrapper method, Object constructor) {
         var realMethod = method.getMethod();
@@ -86,37 +57,22 @@ public class MethodRunner {
 
         var paramType = realMethod.getParameterTypes()[0];
 
-        if (paramType == null)
-            throw new ParameterNotFoundException("Parameter not found on " + realMethod.getName() + " on " + m_currentClass.getSimpleName());
+        stream(csvParameters).map(source -> parseParameterByType(source, paramType))
+                .forEach(param -> handleException(() -> realMethod.invoke(constructor, param), "Something wrong calling method! Check Parameters!...", RuntimeException.class));
 
-        try {
-            for (String source : csvParameters) {
-                var parameter = getParameterViaType(source, paramType);
-                realMethod.invoke(constructor, parameter);
-            }
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } finally {
-            realMethod.setAccessible(false);
-        }
+        realMethod.setAccessible(false);
     }
 
-    private Object getParameterViaType(String source, Class<?> paramType) {
-        if (paramType.equals(String.class))
-            return source;
+    private String getParameters(Method realMethod) {
+        var csvFile = realMethod.getAnnotation(CsvFile.class);
+        var csvSource = realMethod.getAnnotation(CsvSource.class);
 
-        else if (paramType.equals(int.class) || paramType.equals(Integer.class))
-            return Integer.parseInt(source);
+        if (csvFile != null)
+            return m_fileReader.readFileCsvFormat(csvFile);
 
-        else if (paramType.equals(double.class) || paramType.equals(Double.class))
-            return Double.parseDouble(source);
+        else if (csvSource != null)
+            return csvSource.value();
 
-        else if (paramType.equals(long.class) || paramType.equals(Long.class))
-            return Long.parseLong(source);
-
-        else if (paramType.equals(Boolean.class) || paramType.equals(boolean.class))
-            return Boolean.parseBoolean(source);
-        else
-            return source.charAt(0);
+        throw new SourceNotFoundException("Source not found!...");
     }
 }
