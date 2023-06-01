@@ -4,15 +4,25 @@
 
 ### Package:
 
-- Package structure must be below. This is an example Test Project. One important thing to note is that there must be a **"test_fw"** directory in the "src" directory, and this directory **must be marked as the "source"** Java package._You can change name the _test_ package_ under the Java package as you wish.
+- Package structure must be below. This is an example Test Project. One important thing to note is that there must be a
+  **"test_fw"** directory in the "src" directory, and this directory **must be marked as the "source"** Java package.
+  _You can change name the _test_ package_ under the Java package as you wish.
 -
 - ![package.png](pictures%2Fpackage.png)
 
 ## Usage
 
- 1. Add the Unit-Test-Framework library to your project.
+1. Firstly, you should install project to local using maven then add the Unit-Test-Framework library to your project.
 
- 2. Create Test class and annotate with `@TestFrameworkApplication` and in main method,you should call`TestFrameworkApp.run(TestApplication.class, DisplayType.Console)`. You can see an example below.
+   ```` <dependency>
+            <groupId>nuricanozturk.dev</groupId>
+            <artifactId>Unit-Test-Framework</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+   ````
+
+2. Create Test class and annotate with `@TestFrameworkApplication` and in main method,you should
+   call`TestFrameworkApp.run(TestApplication.class, DisplayType.Console)`. You can see an example below.
 
 ##### Trigger Method
 
@@ -28,33 +38,44 @@ public class TestApplication {
 
 ## You need to know about Annotations
 
- 1. `@UnitTest` annotation
+1. `@UnitTest` annotation
 
-        - If you use @UnitTest annotation, you cannot use parameter on the method and you can use ONLY @DisplayName annotation with @UnitTest annotation.
+       - If you use @UnitTest annotation, you cannot use parameter on the method and you can use ONLY @DisplayName annotation with @UnitTest annotation.
 
- 2. `@ParameterizedTest` annotation
+2. `@ParameterizedTest` annotation
 
-        - When using the ParameterizedTest annotation, you must always use either the @CsvSource annotation or the @CsvFile annotation. Additionally, you can use the DisplayName annotation if desired. However, when using the ParameterizedTest annotation, you cannot use the @UnitTest annotation or any others except for the ones mentioned above.
+       - When using the ParameterizedTest annotation, you must always use either the @CsvSource annotation or the @CsvFile annotation. Additionally, you can use the DisplayName annotation if desired. However, when using the ParameterizedTest annotation, you cannot use the @UnitTest annotation or any others except for the ones mentioned above.
 
- 3. `@BeforeEach, @BeforeAll, @AfterEach, @AfterAll` annotations
+3. `@BeforeEach, @BeforeAll, @AfterEach, @AfterAll` annotations
 
-        - If you are using any of these annotations, you can only use the @DisplayName annotation alongside them.
+       - If you are using any of these annotations, you can only use the @DisplayName annotation alongside them.
+4. `@TestClass` annotation
+
+        - You should use only Testing class.
+
 ## Annotation Table
-| Annotation         | Has Method Parameter | Usable Annotations                      | Unsuable Annotations                                                                         |
-|--------------------|:--------------------:|-----------------------------------------|----------------------------------------------------------------------------------------------|
-| @UnitTest          |          NO          | @DisplayName                            | @ParameterizedTest, @CsvFile, @CsvSource<br/>@BeforeAll, @Before Each, @AfterAll, @AfterEach |
-| @ParameterizedTest |     YES(Only 1)      | @CsvFile OR @CsvSource<br/>@DisplayName | @UnitTest,@BeforeAll, @BeforeEach, @AfterAll, @AfterEach                                     |
-| @DisplayName       |          NO          | All of them                             | DOES NOT EXISTS                                                                              |
-| @BeforeEach        |          NO          | @DisplayName                            | Others                                                                                       |
-| @BeforeAll         |          NO          | @DisplayName                            | Others                                                                                       |
-| @AfterEach         |          NO          | @DisplayName                            | Others                                                                                       |
-| @AfterAll          |          NO          | @DisplayName                            | Others                                                                                       |
+
+| Annotation                | Has Method Parameter | Usable Annotations                      | Unsuable Annotations                                                                         |
+|---------------------------|:--------------------:|-----------------------------------------|----------------------------------------------------------------------------------------------|
+| @UnitTest                 |          NO          | @DisplayName                            | @ParameterizedTest, @CsvFile, @CsvSource<br/>@BeforeAll, @Before Each, @AfterAll, @AfterEach |
+| @ParameterizedTest        |     YES(Only 1)      | @CsvFile OR @CsvSource<br/>@DisplayName | @UnitTest,@BeforeAll, @BeforeEach, @AfterAll, @AfterEach                                     |
+| @DisplayName              |          NO          | All of them                             | DOES NOT EXISTS                                                                              |
+| @BeforeEach               |          NO          | @DisplayName                            | Others                                                                                       |
+| @BeforeAll                |          NO          | @DisplayName                            | Others                                                                                       |
+| @AfterEach                |          NO          | @DisplayName                            | Others                                                                                       |
+| @AfterAll                 |          NO          | @DisplayName                            | Others                                                                                       |
+| @TestClass                |          NO          | NOT EXISTS                              | Others                                                                                       |
+| @TestFrameworkApplication |          NO          | NOT EXISTS                              | Others                                                                                       |
 
 ## Contributing and Contact
- If you have any bug reports, suggestions, or would like to contribute to the Unit-Test-Framework, please contact me with email: **canozturk309@gmail.com**
+
+If you have any bug reports, suggestions, or would like to contribute to the Unit-Test-Framework, please contact me with
+email: **canozturk309@gmail.com**
 
 ## Example
+
 ```java
+
 @TestClass
 public class StackArrayTest {
     private LinkedList<String> linkedList;
@@ -123,10 +144,12 @@ public class QueueArrayTest {
 public class MyTest {
     private List<String> stringList;
     private List<Integer> integerList;
+
     @BeforeAll
     public void startMessage() {
         System.out.println("Start Test");
     }
+
     @BeforeEach
     public void setUp() {
         stringList = List.of("Nuri", "Can", "OZTURK", "Halil", "Java");
@@ -155,6 +178,7 @@ public class MyTest {
     public void isNotArmstrongNumber(int number) {
         Check.checkFalse(Armstrong.isArmstrongNumber(number));
     }
+
     @AfterAll
     public void finishMessage() {
         System.out.println("Finish!");
@@ -162,6 +186,7 @@ public class MyTest {
 }
 
 ```
+
 ### Test Result
 
 ![1.png](..%2Fpictures%2F1.png)
