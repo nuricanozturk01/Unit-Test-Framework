@@ -62,6 +62,9 @@ class MethodRunner implements IMethodRunner {
         } catch (IllegalAccessException e) {
             throw new RuntimeException("METHOD ERROR!", e);
         }
+        finally {
+            realMethod.setAccessible(false);
+        }
     }
 
     private void giveMessage(Throwable cause, String displayName) {
