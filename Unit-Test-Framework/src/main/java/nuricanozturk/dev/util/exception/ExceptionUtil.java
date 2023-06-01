@@ -1,5 +1,5 @@
 package nuricanozturk.dev.util.exception;
-
+// Some part from C and System Programmers association in this class.
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Consumer;
 

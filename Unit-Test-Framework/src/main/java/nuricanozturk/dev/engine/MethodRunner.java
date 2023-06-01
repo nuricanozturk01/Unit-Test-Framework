@@ -13,7 +13,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static nuricanozturk.dev.util.ParameterConverter.parseParameterByType;
-import static nuricanozturk.dev.util.exception.ExceptionUtil.handleException;
 
 class MethodRunner implements IMethodRunner {
 
