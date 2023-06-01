@@ -30,15 +30,15 @@ public class TestApplication {
 
 ## You need to know about Annotations
 
-#### 1. `@UnitTest` annotation
+ 1. `@UnitTest` annotation
 
         - If you use @UnitTest annotation, you cannot use parameter on the method and you can use ONLY @DisplayName annotation with @UnitTest annotation.
 
-#### 2. `@ParameterizedTest` annotation
+ 2. `@ParameterizedTest` annotation
 
         - When using the ParameterizedTest annotation, you must always use either the @CsvSource annotation or the @CsvFile annotation. Additionally, you can use the DisplayName annotation if desired. However, when using the ParameterizedTest annotation, you cannot use the @UnitTest annotation or any others except for the ones mentioned above.
 
-#### 3. `@BeforeEach, @BeforeAll, @AfterEach, @AfterAll` annotations
+ 3. `@BeforeEach, @BeforeAll, @AfterEach, @AfterAll` annotations
 
         - If you are using any of these annotations, you can only use the @DisplayName annotation alongside them.
 
@@ -53,6 +53,6 @@ public class TestApplication {
 | @AfterAll          |          NO          | @DisplayName                            | Others                                                                                       |
 
 ## Contributing and Contact
-#### If you have any bug reports, suggestions, or would like to contribute to the Unit-Test-Framework, please contact me with email: **canozturk309@gmail.com**
+ If you have any bug reports, suggestions, or would like to contribute to the Unit-Test-Framework, please contact me with email: **canozturk309@gmail.com**
 
 ## Example
