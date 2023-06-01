@@ -3,22 +3,23 @@ package nuricanozturk.dev.engine;
 import nuricanozturk.dev.annotation.CsvFile;
 import nuricanozturk.dev.annotation.CsvSource;
 import nuricanozturk.dev.annotation.DisplayName;
-import nuricanozturk.dev.display.ConsoleDisplay;
 import nuricanozturk.dev.display.IDisplayEngine;
-import nuricanozturk.dev.exception.FailedTestException;
+import nuricanozturk.dev.exception.FailedCheckArrayEqualException;
+import nuricanozturk.dev.exception.FailedCheckBooleanException;
+import nuricanozturk.dev.exception.FailedCheckEqualException;
 import nuricanozturk.dev.exception.SourceNotFoundException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static java.util.Arrays.stream;
-import static nuricanozturk.dev.util.exception.ExceptionUtil.handleException;
 import static nuricanozturk.dev.util.ParameterConverter.parseParameterByType;
+import static nuricanozturk.dev.util.exception.ExceptionUtil.handleException;
 
-class MethodRunner implements IMethodRunner{
+class MethodRunner implements IMethodRunner {
 
     private final FileReader m_fileReader;
-    private Class<?> m_currentClass;
     private final IDisplayEngine m_displayEngine;
+    private Class<?> m_currentClass;
 
     public MethodRunner(FileReader m_fileReader, IDisplayEngine displayEngine) {
         this.m_fileReader = m_fileReader;
@@ -26,7 +27,7 @@ class MethodRunner implements IMethodRunner{
     }
 
     @Override
-    public String run(MethodWrapper method, Class<?> $class) {
+    public void run(MethodWrapper method, Class<?> $class) {
         m_currentClass = $class;
 
         var displayName = method.getMethod().getName();
@@ -37,46 +38,85 @@ class MethodRunner implements IMethodRunner{
             displayName = value.isBlank() || value.isEmpty() ? displayName : value;
         }
 
-        var ctor = handleException(() -> $class.getDeclaredConstructor().newInstance(), "Please be sure use default ctor!...", RuntimeException.class);
-
+        var ctor = handleException(() -> $class.getDeclaredConstructor().newInstance(), "Please be sure used default ctor!...", RuntimeException.class);
+        m_displayEngine.displayMethod(displayName);
         if (method.isParameterizedTest())
-            runParameterizedTest(method, ctor);
+            runParameterizedTest(method, ctor, displayName);
 
         else runUnitTest(method, ctor, displayName);
 
-        return displayName + " named method was runned!\n";
     }
 
 
     private void runUnitTest(MethodWrapper method, Object constructor, String displayName) {
         var realMethod = method.getMethod();
         realMethod.setAccessible(true);
-        handleException(() -> realMethod.invoke(constructor),
-                ((ConsoleDisplay)m_displayEngine).getFailText(displayName + " test was failed..."),
-                RuntimeException.class,
-                () -> {
-                    realMethod.setAccessible(false);
-                    //m_displayEngine.displaySuccess(displayName + " tes success!..");
-                });
+        try {
+            realMethod.invoke(constructor);
+            m_displayEngine.displayUnitTestSuccess(displayName);
+        } catch (InvocationTargetException e) {
+
+            Throwable cause = e.getCause();
+            if (cause instanceof FailedCheckBooleanException) {
+                var expected = ((FailedCheckBooleanException) cause).getExpected();
+                var actual = ((FailedCheckBooleanException) cause).getActual();
+                m_displayEngine.displayParameterizedTestFail(displayName, actual, expected);
+            } else if (cause instanceof FailedCheckArrayEqualException) {
+                var expected = ((FailedCheckArrayEqualException) cause).getExpected();
+                var actual = ((FailedCheckArrayEqualException) cause).getActual();
+                m_displayEngine.displayUnitTestFail(displayName, expected, actual);
+            } else if (cause instanceof FailedCheckEqualException) {
+                var expected = ((FailedCheckEqualException) cause).getExpected();
+                var actual = ((FailedCheckEqualException) cause).getActual();
+                m_displayEngine.displayUnitTestFail(displayName, expected, actual);
+            } else throw new RuntimeException("METHOD ERROR!", cause);
+
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("METHOD ERROR!", e);
+        } finally {
+            realMethod.setAccessible(false);
+        }
     }
 
-    private void runUnitTest(Method realMethod, String displayName) {
-        realMethod.setAccessible(false);
-        m_displayEngine.displaySuccess(displayName + " test was success!");
-    }
-
-    private void runParameterizedTest(MethodWrapper method, Object constructor) {
+    private void runParameterizedTest(MethodWrapper method, Object constructor, String displayName) {
         var realMethod = method.getMethod();
         var csvParameters = getParameters(realMethod).split(",");
 
-        realMethod.setAccessible(true);
 
         var paramType = realMethod.getParameterTypes()[0];
 
-        stream(csvParameters).map(source -> parseParameterByType(source, paramType))
-                .forEach(param -> handleException(() -> realMethod.invoke(constructor, param), "Something wrong calling method! Check Parameters!...", RuntimeException.class));
+        Object parameter = null;
 
-        realMethod.setAccessible(false);
+        try {
+            realMethod.setAccessible(true);
+            for (String source : csvParameters) {
+                parameter = parseParameterByType(source, paramType);
+                realMethod.invoke(constructor, parameter);
+                m_displayEngine.displayParameterizedTestSuccess(displayName, source);
+            }
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+
+            if (cause instanceof FailedCheckBooleanException) {
+                var expected = ((FailedCheckBooleanException) cause).getExpected();
+                var actual = ((FailedCheckBooleanException) cause).getActual();
+                m_displayEngine.displayParameterizedTestFail(displayName, actual, expected);
+            } else if (cause instanceof FailedCheckArrayEqualException) {
+                var expected = ((FailedCheckArrayEqualException) cause).getExpected();
+                var actual = ((FailedCheckArrayEqualException) cause).getActual();
+                m_displayEngine.displayUnitTestFail(displayName, expected, actual);
+            } else if (cause instanceof FailedCheckEqualException) {
+                var expected = ((FailedCheckEqualException) cause).getExpected();
+                var actual = ((FailedCheckEqualException) cause).getActual();
+                m_displayEngine.displayParameterizedTestFail(displayName, expected, actual);
+
+            } else throw new RuntimeException("METHOD ERROR!", cause);
+
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("METHOD ERROR!", e);
+        } finally {
+            realMethod.setAccessible(false);
+        }
     }
 
     private String getParameters(Method realMethod) {

@@ -1,22 +1,17 @@
 package nuricanozturk.dev.display;
 
 
-import java.util.concurrent.atomic.AtomicReference;
-
 public interface IDisplayEngine {
-    AtomicReference<IDisplayEngine> DISPLAY_ENGINE = new AtomicReference<>();
 
-    static IDisplayEngine getInstance(DisplayType displayType) {
-        if (DISPLAY_ENGINE.get() == null)
-            DISPLAY_ENGINE.set(DisplayEngineFactory.createDisplay(displayType));
-        return DISPLAY_ENGINE.get();
-    }
+    void display(String msg);
+    void displayMethod(String msg);
+    void displayClass(String msg);
 
-    static IDisplayEngine getInstance() {
-        return DISPLAY_ENGINE.get();
-    }
+    void displayUnitTestSuccess(String displayName);
 
-    void displaySuccess(String msg);
+    void displayUnitTestFail(String displayName, Object expected, Object actual);
 
-    void displayFail(String msg);
+    void displayParameterizedTestFail(String displayName, Object expected, Object actual);
+
+    void displayParameterizedTestSuccess(String displayName, String msg);
 }
