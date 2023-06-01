@@ -4,9 +4,7 @@
 
 ### Package:
 
-- #### Package structure must be below. This is an example Test Project. One important thing to note is that there must be a
-  **"test_fw"** directory in the "src" directory, and this directory **must be marked as the "source"** Java package.
-  _You can change name the _test_ package_ under the Java package as you wish.
+- #### Package structure must be below. This is an example Test Project. One important thing to note is that there must be a **"test_fw"** directory in the "src" directory, and this directory **must be marked as the "source"** Java package._You can change name the _test_ package_ under the Java package as you wish.
 -
 - ![package.png](pictures%2Fpackage.png)
 
