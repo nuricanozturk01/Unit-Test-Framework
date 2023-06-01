@@ -154,7 +154,7 @@ class MethodScanner implements IMethodScanner {
 
                 if (displayAnnotation != null)
                     wrapper.addAnnotation(displayAnnotation);
-
+                wrapper.setUnitTest(true);
                 list.add(of(wrapper));
             }
         }

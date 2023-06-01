@@ -19,6 +19,6 @@ class FileReader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return sb.toString();
+        return sb.toString().replaceAll("\\s", "");
     }
 }

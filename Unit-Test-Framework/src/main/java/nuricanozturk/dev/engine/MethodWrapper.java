@@ -9,12 +9,22 @@ public class MethodWrapper {
     private final Method method;
     private final List<Annotation> annotations;
     private boolean isParameterizedTest;
+    private boolean isUnitTest;
 
     public MethodWrapper(Method method) {
         this.method = method;
         annotations = new ArrayList<>();
         isParameterizedTest = false;
+        isUnitTest = false;
 
+    }
+
+    public boolean isUnitTest() {
+        return isUnitTest;
+    }
+
+    public void setUnitTest(boolean unitTest) {
+        isUnitTest = unitTest;
     }
 
     public List<Annotation> getAnnotations() {
