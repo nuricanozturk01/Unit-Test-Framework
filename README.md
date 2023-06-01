@@ -1,6 +1,6 @@
 # Unit-Test-Framework
 
-### This framework allows you to create and run unit tests in Java, similar to JUnit. Below, you will find basic information and examples on how to use the Unit-Test-Framework.
+ This framework allows you to create and run unit tests in Java, similar to JUnit. Below, you will find basic information and examples on how to use the Unit-Test-Framework.
 
 ### Package:
 
