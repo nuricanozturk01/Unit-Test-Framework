@@ -4,6 +4,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 public final class AnnotationValidator {
+    private AnnotationValidator() {
+
+    }
 
     public static boolean validateAnnotation(Method method, Class<? extends Annotation> annotation) {
         return method.getAnnotation(annotation) != null;

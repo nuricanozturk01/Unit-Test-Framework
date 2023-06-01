@@ -14,7 +14,7 @@ import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-class MethodScanner implements IMethodScanner {
+final class MethodScanner implements IMethodScanner {
     private final LinkedList<MethodWrapper> methodLinkedList;
 
     public MethodScanner() {

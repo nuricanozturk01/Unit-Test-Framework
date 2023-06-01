@@ -8,6 +8,10 @@ import java.util.List;
 
 public final class MethodValidator {
 
+    private MethodValidator() {
+
+    }
+
     public static List<Method> validateMethods(List<Method> methodList) {
         return methodList.stream().filter(MethodValidator::isValidMethod).toList();
     }

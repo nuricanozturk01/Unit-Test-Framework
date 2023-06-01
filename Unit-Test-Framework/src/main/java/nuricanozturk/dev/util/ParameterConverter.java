@@ -1,6 +1,10 @@
 package nuricanozturk.dev.util;
 
-public class ParameterConverter {
+public final class ParameterConverter {
+    private ParameterConverter() {
+
+    }
+
     public static Object parseParameterByType(String source, Class<?> paramType) {
         if (paramType.equals(String.class))
             return source;

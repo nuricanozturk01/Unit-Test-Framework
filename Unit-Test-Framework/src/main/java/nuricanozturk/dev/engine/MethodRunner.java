@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 
 import static nuricanozturk.dev.util.ParameterConverter.parseParameterByType;
 
-class MethodRunner implements IMethodRunner {
+final class MethodRunner implements IMethodRunner {
 
     private final FileReader m_fileReader;
     private final IDisplayEngine m_displayEngine;

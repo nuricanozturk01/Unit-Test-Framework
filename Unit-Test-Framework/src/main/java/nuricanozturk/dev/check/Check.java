@@ -10,6 +10,9 @@ import java.util.Collection;
 public final class Check {
     private static final double DEFAULT_DELTA = .0014;
 
+    private Check() {
+    }
+
     public static void checkEqual(byte expected, byte actual) {
         throw new UnsupportedOperationException("TODO: ");
     }

@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-class FileReader {
+final class FileReader {
     public String readFileCsvFormat(CsvFile csvFile) {
         var path = csvFile.value();
         var filePath = Path.of(path);
