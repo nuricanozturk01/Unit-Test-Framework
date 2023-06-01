@@ -6,9 +6,10 @@ public final class ConsoleDisplay implements IDisplayEngine {
     public void display(String msg) {
         System.out.println(msg);
     }
+
     @Override
     public void displayMethod(String msg) {
-        System.out.println( Color.CYAN.getColor() + "===> " + msg + " method:");
+        System.out.println(Color.CYAN.getColor() + "===> " + msg + " method:" + Color.RESET.getColor());
     }
 
     @Override
@@ -18,7 +19,7 @@ public final class ConsoleDisplay implements IDisplayEngine {
 
     @Override
     public void displayUnitTestSuccess(String displayName) {
-        System.out.printf("%s\t[SUCCESS] Method: [%s]%s\n", Color.GREEN.getColor(), displayName, Color.NORMAL_TEXT.getColor());
+        System.out.printf("%s\t[SUCCESS] Method: [%s]%s\n", Color.GREEN.getColor(), displayName, Color.RESET.getColor());
     }
 
     @Override
