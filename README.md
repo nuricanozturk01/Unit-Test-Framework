@@ -6,7 +6,7 @@
 
 ### Package:
  - Package structure must be below:
- ![package.png](pictures%2Fpackage.png)
+ - ![package.png](pictures%2Fpackage.png)
 ### Trigger Method
 ```java
 @TestFrameworkApplication
