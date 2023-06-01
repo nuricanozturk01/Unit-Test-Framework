@@ -4,15 +4,15 @@
 
 ### Package:
 
-- #### Package structure must be below. This is an example Test Project. One important thing to note is that there must be a **"test_fw"** directory in the "src" directory, and this directory **must be marked as the "source"** Java package._You can change name the _test_ package_ under the Java package as you wish.
+- Package structure must be below. This is an example Test Project. One important thing to note is that there must be a **"test_fw"** directory in the "src" directory, and this directory **must be marked as the "source"** Java package._You can change name the _test_ package_ under the Java package as you wish.
 -
 - ![package.png](pictures%2Fpackage.png)
 
 ## Usage
 
-#### 1. Add the Unit-Test-Framework library to your project.
+ 1. Add the Unit-Test-Framework library to your project.
 
-#### 2. Create Test class and annotate with `@TestFrameworkApplication` and in main method,you should call`TestFrameworkApp.run(TestApplication.class, DisplayType.Console)`. You can see an example below.
+ 2. Create Test class and annotate with `@TestFrameworkApplication` and in main method,you should call`TestFrameworkApp.run(TestApplication.class, DisplayType.Console)`. You can see an example below.
 
 ##### Trigger Method
 
