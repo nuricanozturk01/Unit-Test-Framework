@@ -193,7 +193,10 @@ public class MyTest {
 ```
 
 ### Test Result
-
+#### Success
 ![1.png](..%2Fpictures%2F1.png)
 
 ![2.png](..%2Fpictures%2F2.png)
+
+#### Fail
+![fail.png](..%2Fpictures%2F3.png)
