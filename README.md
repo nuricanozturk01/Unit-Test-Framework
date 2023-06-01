@@ -106,7 +106,9 @@ public class StackArrayTest {
         Check.checkTrue(linkedList.isEmpty());
     }
 }
+```
 
+```java
 @TestClass
 public class QueueArrayTest {
     private static final String[] stringArr = new String[]{"Nuri", "Can", "ozturk", "stack", "array"};
@@ -140,7 +142,9 @@ public class QueueArrayTest {
         Check.checkEqual(0, m_queue.getSize());
     }
 }
+```
 
+```java
 @TestClass
 public class MyTest {
     private List<String> stringList;
