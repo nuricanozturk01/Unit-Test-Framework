@@ -58,20 +58,36 @@ class MethodRunner implements IMethodRunner {
             m_displayEngine.displayUnitTestSuccess(displayName);
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
-            giveMessage(cause, displayName);
+            m_displayEngine.displayUnitTestFail(displayName, "", "");
         } catch (IllegalAccessException e) {
             throw new RuntimeException("METHOD ERROR!", e);
-        }
-        finally {
+        } finally {
             realMethod.setAccessible(false);
         }
     }
 
-    private void giveMessage(Throwable cause, String displayName) {
+    private void giveMessageParameterizedTest(Throwable cause, String displayName) {
         if (cause instanceof FailedCheckBooleanException) {
             var expected = ((FailedCheckBooleanException) cause).getExpected();
             var actual = ((FailedCheckBooleanException) cause).getActual();
             m_displayEngine.displayParameterizedTestFail(displayName, actual, expected);
+        } else if (cause instanceof FailedCheckArrayEqualException) {
+            var expected = ((FailedCheckArrayEqualException) cause).getExpected();
+            var actual = ((FailedCheckArrayEqualException) cause).getActual();
+            m_displayEngine.displayParameterizedTestFail(displayName, expected, actual);
+        } else if (cause instanceof FailedCheckEqualException) {
+            var expected = ((FailedCheckEqualException) cause).getExpected();
+            var actual = ((FailedCheckEqualException) cause).getActual();
+            m_displayEngine.displayParameterizedTestFail(displayName, expected, actual);
+        } else throw new RuntimeException("Error on " + displayName + " method! in " + m_currentClass.getSimpleName(), cause);
+
+    }
+
+    private void giveMessageUnitTest(Throwable cause, String displayName) {
+        if (cause instanceof FailedCheckBooleanException) {
+            var expected = ((FailedCheckBooleanException) cause).getExpected();
+            var actual = ((FailedCheckBooleanException) cause).getActual();
+            m_displayEngine.displayUnitTestFail(displayName, actual, expected);
         } else if (cause instanceof FailedCheckArrayEqualException) {
             var expected = ((FailedCheckArrayEqualException) cause).getExpected();
             var actual = ((FailedCheckArrayEqualException) cause).getActual();
@@ -80,10 +96,9 @@ class MethodRunner implements IMethodRunner {
             var expected = ((FailedCheckEqualException) cause).getExpected();
             var actual = ((FailedCheckEqualException) cause).getActual();
             m_displayEngine.displayUnitTestFail(displayName, expected, actual);
-        } else throw new RuntimeException("METHOD ERROR!", cause);
+        } else throw new RuntimeException("Error on " + displayName + " method! in " + m_currentClass.getSimpleName(), cause);
 
     }
-
     private void runUnitTest(MethodWrapper method, Object constructor, String displayName) {
         var realMethod = method.getMethod();
         realMethod.setAccessible(true);
@@ -92,7 +107,7 @@ class MethodRunner implements IMethodRunner {
             m_displayEngine.displayUnitTestSuccess(displayName);
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
-            giveMessage(cause, displayName);
+            giveMessageUnitTest(cause, displayName);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("METHOD ERROR!", e);
         } finally {
@@ -118,7 +133,7 @@ class MethodRunner implements IMethodRunner {
             }
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
-            giveMessage(cause, displayName);
+            giveMessageParameterizedTest(cause, displayName);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("METHOD ERROR!", e);
         } finally {
