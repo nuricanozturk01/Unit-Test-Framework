@@ -1,3 +1,11 @@
+/*----------------------------------------------------------------
+	FILE		: AfterAll.java
+	AUTHOR		: Nuri Can OZTURK
+	LAST UPDATE	: 02.05.2023
+	AfterAll annotation class represent AfterAll annotation on JUnit
+	Copyleft (c) Unit-Test-Framework
+	All Rights Free
+----------------------------------------------------------------*/
 package nuricanozturk.dev.annotation;
 
 import java.lang.annotation.ElementType;
@@ -7,6 +15,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface AfterAll
-{
+public @interface AfterAll {
 }

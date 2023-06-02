@@ -1,3 +1,11 @@
+/*----------------------------------------------------------------
+	FILE		: MethodValidator.java
+	AUTHOR		: Nuri Can OZTURK
+	LAST UPDATE	: 02.05.2023
+	MethodValidator class validate methods and check the method-annotation rules.
+	Copyleft (c) Unit-Test-Framework
+	All Rights Free
+----------------------------------------------------------------*/
 package nuricanozturk.dev.util.validator;
 
 import nuricanozturk.dev.annotation.*;

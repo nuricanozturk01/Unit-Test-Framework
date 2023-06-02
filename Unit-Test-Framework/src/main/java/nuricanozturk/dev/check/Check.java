@@ -1,3 +1,11 @@
+/*----------------------------------------------------------------
+	FILE		: Check.java
+	AUTHOR		: Nuri Can OZTURK
+	LAST UPDATE	: 02.05.2023
+	Check class represent the Assertions class on JUnit
+	Copyleft (c) Unit-Test-Framework
+	All Rights Free
+----------------------------------------------------------------*/
 package nuricanozturk.dev.check;
 
 import nuricanozturk.dev.exception.FailedCheckBooleanException;

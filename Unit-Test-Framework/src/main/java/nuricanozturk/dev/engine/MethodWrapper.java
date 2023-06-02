@@ -1,3 +1,11 @@
+/*----------------------------------------------------------------
+	FILE		: MethodWrapper.java
+	AUTHOR		: Nuri Can OZTURK
+	LAST UPDATE	: 02.05.2023
+	MethodWrapper class store the method and its necessary annotations. (for easy-use)
+	Copyleft (c) Unit-Test-Framework
+	All Rights Free
+----------------------------------------------------------------*/
 package nuricanozturk.dev.engine;
 
 import java.lang.annotation.Annotation;

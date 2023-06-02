@@ -1,5 +1,12 @@
+/*----------------------------------------------------------------
+	FILE		: ExceptionUtil.java
+	AUTHOR		: Nuri Can OZTURK
+	LAST UPDATE	: 02.05.2023
+	ExceptionUtil class for functional exceptions. Get help from CSD
+	Copyleft (c) Unit-Test-Framework
+	All Rights Free
+----------------------------------------------------------------*/
 package nuricanozturk.dev.util.exception;
-// Some part from C and System Programmers association in this class.
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Consumer;
 

@@ -1,3 +1,11 @@
+/*----------------------------------------------------------------
+	FILE		: IDisplayEngine.java
+	AUTHOR		: Nuri Can OZTURK
+	LAST UPDATE	: 02.05.2023
+	IDisplayEngine interface represent display engine methods.
+	Copyleft (c) Unit-Test-Framework
+	All Rights Free
+----------------------------------------------------------------*/
 package nuricanozturk.dev.display;
 
 

@@ -1,3 +1,11 @@
+/*----------------------------------------------------------------
+	FILE		: AnnotationValidator.java
+	AUTHOR		: Nuri Can OZTURK
+	LAST UPDATE	: 02.05.2023
+	AnnotationValidator class validate annotations that exists or not.
+	Copyleft (c) Unit-Test-Framework
+	All Rights Free
+----------------------------------------------------------------*/
 package nuricanozturk.dev.util.validator;
 
 import java.lang.annotation.Annotation;

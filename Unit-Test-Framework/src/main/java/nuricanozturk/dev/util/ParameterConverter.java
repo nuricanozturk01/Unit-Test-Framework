@@ -1,3 +1,11 @@
+/*----------------------------------------------------------------
+	FILE		: ParameterConverter.java
+	AUTHOR		: Nuri Can OZTURK
+	LAST UPDATE	: 02.05.2023
+	ParameterConverter class convert the parameters to specific type. (@CsvFile)
+	Copyleft (c) Unit-Test-Framework
+	All Rights Free
+----------------------------------------------------------------*/
 package nuricanozturk.dev.util;
 
 public final class ParameterConverter {

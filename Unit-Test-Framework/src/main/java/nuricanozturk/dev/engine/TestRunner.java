@@ -1,3 +1,11 @@
+/*----------------------------------------------------------------
+	FILE		: TestRunner.java
+	AUTHOR		: Nuri Can OZTURK
+	LAST UPDATE	: 02.05.2023
+	TestRunner class call the method runner than start the test class by class
+	Copyleft (c) Unit-Test-Framework
+	All Rights Free
+----------------------------------------------------------------*/
 package nuricanozturk.dev.engine;
 
 import nuricanozturk.dev.display.DisplayEngineFactory;

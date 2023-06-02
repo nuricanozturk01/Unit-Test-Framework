@@ -1,3 +1,11 @@
+/*----------------------------------------------------------------
+	FILE		: FailedCheckEqualException.java
+	AUTHOR		: Nuri Can OZTURK
+	LAST UPDATE	: 02.05.2023
+	FailedCheckEqualException exception class for failed non-boolean tests.
+	Copyleft (c) Unit-Test-Framework
+	All Rights Free
+----------------------------------------------------------------*/
 package nuricanozturk.dev.exception;
 
 public class FailedCheckEqualException extends RuntimeException {

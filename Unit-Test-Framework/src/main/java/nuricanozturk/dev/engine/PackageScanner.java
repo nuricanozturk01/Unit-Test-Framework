@@ -1,3 +1,11 @@
+/*----------------------------------------------------------------
+	FILE		: PackageScanner.java
+	AUTHOR		: Nuri Can OZTURK
+	LAST UPDATE	: 02.05.2023
+	PackageScanner class scan the packages that find the @TestClass annotations classes.
+	Copyleft (c) Unit-Test-Framework
+	All Rights Free
+----------------------------------------------------------------*/
 package nuricanozturk.dev.engine;
 
 import java.io.File;
@@ -7,8 +15,8 @@ import java.util.List;
 public final class PackageScanner implements IPackageScanner {
     public PackageScanner() {
     }
-
-    private List<String> getPackages(String directory) {
+    @Override
+    public List<String> getPackages(String directory) {
         var packageNames = new ArrayList<String>();
 
         try {

@@ -1,3 +1,11 @@
+/*----------------------------------------------------------------
+	FILE		: TestEngine.java
+	AUTHOR		: Nuri Can OZTURK
+	LAST UPDATE	: 02.05.2023
+	TestEngine class prepare classes for test.
+	Copyleft (c) Unit-Test-Framework
+	All Rights Free
+----------------------------------------------------------------*/
 package nuricanozturk.dev.engine;
 
 import nuricanozturk.dev.annotation.TestClass;

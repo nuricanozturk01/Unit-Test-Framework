@@ -1,3 +1,11 @@
+/*----------------------------------------------------------------
+	FILE		: Color.java
+	AUTHOR		: Nuri Can OZTURK
+	LAST UPDATE	: 02.05.2023
+	Color enum class represent colors for display engine
+	Copyleft (c) Unit-Test-Framework
+	All Rights Free
+----------------------------------------------------------------*/
 package nuricanozturk.dev.display;
 
 public enum Color {
