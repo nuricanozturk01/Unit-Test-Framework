@@ -202,5 +202,5 @@ public class MyTest {
 ![fail.png](..%2Fpictures%2Ffail.png)
 
 ### Bugs and Features
- - I have detected bugs. The detected bugs will be fixed as soon as possible.
+ - If you detect bug, contact me.
  - No new feature will be added.
