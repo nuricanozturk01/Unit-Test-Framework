@@ -200,3 +200,7 @@ public class MyTest {
 
 #### Fail
 ![fail.png](..%2Fpictures%2Ffail.png)
+
+### Bugs and Features
+ - I have detected bugs. The detected bugs will be fixed as soon as possible.
+ - No new feature will be added.
