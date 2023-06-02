@@ -1,6 +1,5 @@
 package nuricanozturk.dev.check;
 
-import nuricanozturk.dev.exception.FailedCheckArrayEqualException;
 import nuricanozturk.dev.exception.FailedCheckBooleanException;
 import nuricanozturk.dev.exception.FailedCheckEqualException;
 
@@ -14,7 +13,8 @@ public final class Check {
     }
 
     public static void checkEqual(byte expected, byte actual) {
-        throw new UnsupportedOperationException("TODO: ");
+        if (expected != actual)
+            throw new FailedCheckEqualException(expected, actual);
     }
 
     public static void checkEqual(int expected, int actual) {
@@ -23,7 +23,7 @@ public final class Check {
     }
 
     public static void checkEqual(double expected, double actual, double delta) {
-        if (expected != actual)
+        if (Math.abs(expected - actual) > delta)
             throw new FailedCheckEqualException(expected, actual);
     }
 
@@ -33,7 +33,7 @@ public final class Check {
     }
 
     public static void checkEqual(float expected, float actual, float delta) {
-        if (expected != actual)
+        if (Math.abs(expected - actual) > delta)
             throw new FailedCheckEqualException(expected, actual);
     }
 
@@ -66,12 +66,12 @@ public final class Check {
     }
 
     public static void checkNotEqual(float expected, float actual, float delta) {
-        if (expected == actual)
+        if (Math.abs(expected - actual) <= delta)
             throw new FailedCheckEqualException(expected, actual);
     }
 
     public static void checkNotEqual(double expected, double actual, double delta) {
-        if (expected == actual)
+        if (Math.abs(expected - actual) <= delta)
             throw new FailedCheckEqualException(expected, actual);
     }
 
@@ -88,128 +88,156 @@ public final class Check {
     //------------------------------------------------------------------------------------------------------------------
 
     public static void checkArrayEqual(int[] arr1, int[] arr2) {
+        if (arr1 == null || arr2 == null)
+            throw new FailedCheckEqualException("array is null", "array is null");
+
         if (arr1.length != arr2.length)
             throw new FailedCheckEqualException(arr1.length, arr2.length);
 
         if (!Arrays.equals(arr1, arr2))
-            throw new FailedCheckArrayEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
+            throw new FailedCheckEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
     }
 
     public static void checkArrayEqual(byte[] arr1, byte[] arr2) {
+        if (arr1 == null || arr2 == null)
+            throw new FailedCheckEqualException("array is null", "array is null");
+
         if (arr1.length != arr2.length)
             throw new FailedCheckEqualException(arr1.length, arr2.length);
 
         if (!Arrays.equals(arr1, arr2))
-            throw new FailedCheckArrayEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
+            throw new FailedCheckEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
     }
 
     public static void checkArrayEqual(short[] arr1, short[] arr2) {
+        if (arr1 == null || arr2 == null)
+            throw new FailedCheckEqualException("array is null", "array is null");
+
         if (arr1.length != arr2.length)
             throw new FailedCheckEqualException(arr1.length, arr2.length);
 
         if (!Arrays.equals(arr1, arr2))
-            throw new FailedCheckArrayEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
+            throw new FailedCheckEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
     }
 
     public static void checkArrayEqual(double[] arr1, double[] arr2) {
+        if (arr1 == null || arr2 == null)
+            throw new FailedCheckEqualException("array is null", "array is null");
+
         if (arr1.length != arr2.length)
             throw new FailedCheckEqualException(arr1.length, arr2.length);
 
-        if (!Arrays.equals(arr1, arr2))
-            throw new FailedCheckArrayEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
+        for (int i = 0; i < arr1.length; i++)
+            if (Math.abs(arr1[i] - arr2[i]) > DEFAULT_DELTA)
+                throw new FailedCheckEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
+
     }
 
     public static void checkArrayEqual(float[] arr1, float[] arr2) {
+        if (arr1 == null || arr2 == null)
+            throw new FailedCheckEqualException("array is null", "array is null");
+
         if (arr1.length != arr2.length)
             throw new FailedCheckEqualException(arr1.length, arr2.length);
 
-        if (!Arrays.equals(arr1, arr2))
-            throw new FailedCheckArrayEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
+        for (int i = 0; i < arr1.length; i++)
+            if (Math.abs(arr1[i] - arr2[i]) > DEFAULT_DELTA)
+                throw new FailedCheckEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
     }
 
     public static void checkArrayEqual(Object[] arr1, Object[] arr2) {
+        if (arr1 == null || arr2 == null)
+            throw new FailedCheckEqualException("array is null", "array is null");
+
         if (arr1.length != arr2.length)
             throw new FailedCheckEqualException(arr1.length, arr2.length);
 
         if (!Arrays.equals(arr1, arr2))
-            throw new FailedCheckArrayEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
+            throw new FailedCheckEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
     }
     //------------------------------------------------------------------------------------------------------------------
 
     public static void checkArrayNotEqual(int[] arr1, int[] arr2) {
+        if (arr1 == null || arr2 == null)
+            throw new FailedCheckEqualException("array is null", "array is null");
+
         if (arr1.length == arr2.length)
             throw new FailedCheckEqualException(arr1.length, arr2.length);
 
         if (Arrays.equals(arr1, arr2))
-            throw new FailedCheckArrayEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
+            throw new FailedCheckEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
     }
 
     public static void checkArrayNotEqual(byte[] arr1, byte[] arr2) {
+
+        if (arr1 == null || arr2 == null)
+            throw new FailedCheckEqualException("array is null", "array is null");
+
         if (arr1.length == arr2.length)
             throw new FailedCheckEqualException(arr1.length, arr2.length);
 
         if (Arrays.equals(arr1, arr2))
-            throw new FailedCheckArrayEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
+            throw new FailedCheckEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
     }
 
     public static void checkArrayNotEqual(short[] arr1, short[] arr2) {
+        if (arr1 == null || arr2 == null)
+            throw new FailedCheckEqualException("array is null", "array is null");
+
         if (arr1.length == arr2.length)
             throw new FailedCheckEqualException(arr1.length, arr2.length);
 
         if (Arrays.equals(arr1, arr2))
-            throw new FailedCheckArrayEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
+            throw new FailedCheckEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
     }
 
     public static void checkArrayNotEqual(double[] arr1, double[] arr2) {
+        if (arr1 == null || arr2 == null)
+            throw new FailedCheckEqualException("array is null", "array is null");
+
         if (arr1.length == arr2.length)
             throw new FailedCheckEqualException(arr1.length, arr2.length);
 
-        if (Arrays.equals(arr1, arr2))
-            throw new FailedCheckArrayEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
+        for (int i = 0; i < arr1.length; i++)
+            if (Math.abs(arr1[i] - arr2[i]) <= DEFAULT_DELTA)
+                throw new FailedCheckEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
     }
 
     public static void checkArrayNotEqual(float[] arr1, float[] arr2) {
+        if (arr1 == null || arr2 == null)
+            throw new FailedCheckEqualException("array is null", "array is null");
+
         if (arr1.length == arr2.length)
             throw new FailedCheckEqualException(arr1.length, arr2.length);
 
-        if (Arrays.equals(arr1, arr2))
-            throw new FailedCheckArrayEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
+        for (int i = 0; i < arr1.length; i++)
+            if (Math.abs(arr1[i] - arr2[i]) <= DEFAULT_DELTA)
+                throw new FailedCheckEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
     }
 
     public static void checkArrayNotEqual(Object[] arr1, Object[] arr2) {
+        if (arr1 == null || arr2 == null)
+            throw new FailedCheckEqualException("array is null", "array is null");
+
         if (arr1.length == arr2.length)
             throw new FailedCheckEqualException(arr1.length, arr2.length);
 
         if (Arrays.equals(arr1, arr2))
-            throw new FailedCheckArrayEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
+            throw new FailedCheckEqualException(Arrays.toString(arr1), Arrays.toString(arr2));
     }
 
 
     //------------------------------------------------------------------------------------------------------------------
 
     public static <T> void checkCollectionEqual(Collection<T> collection1, Collection<T> collection2) {
-        if (collection1.size() != collection2.size())
-            throw new FailedCheckEqualException(collection1.size(), collection2.size());
-        var list1 = collection1.stream().toList();
-        var list2 = collection2.stream().toList();
-
-        for (int i = 0; i < list1.size(); i++) {
-            if (!list1.get(i).equals(list2.get(i)))
-                throw new FailedCheckArrayEqualException(Arrays.toString(list1.toArray()), Arrays.toString(list2.toArray()));
-        }
+        if (!collection1.equals(collection2))
+            throw new FailedCheckEqualException(collection1, collection2);
     }
 
     public static <T> void checkCollectionNotEqual(Collection<T> collection1, Collection<T> collection2) {
 
-        if (collection1.size() == collection2.size())
-            throw new FailedCheckEqualException(collection1.size(), collection2.size());
-        var list1 = collection1.stream().toList();
-        var list2 = collection2.stream().toList();
-
-        for (int i = 0; i < list1.size(); i++) {
-            if (list1.get(i).equals(list2.get(i)))
-                throw new FailedCheckArrayEqualException(Arrays.toString(list1.toArray()), Arrays.toString(list2.toArray()));
-        }
+        if (collection1.equals(collection2))
+            throw new FailedCheckEqualException(collection1, "different elements");
     }
 
 }

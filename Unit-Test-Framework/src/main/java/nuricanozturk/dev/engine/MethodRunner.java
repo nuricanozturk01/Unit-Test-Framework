@@ -4,7 +4,6 @@ import nuricanozturk.dev.annotation.CsvFile;
 import nuricanozturk.dev.annotation.CsvSource;
 import nuricanozturk.dev.annotation.DisplayName;
 import nuricanozturk.dev.display.IDisplayEngine;
-import nuricanozturk.dev.exception.FailedCheckArrayEqualException;
 import nuricanozturk.dev.exception.FailedCheckBooleanException;
 import nuricanozturk.dev.exception.FailedCheckEqualException;
 import nuricanozturk.dev.exception.SourceNotFoundException;
@@ -71,10 +70,6 @@ final class MethodRunner implements IMethodRunner {
             var expected = ((FailedCheckBooleanException) cause).getExpected();
             var actual = ((FailedCheckBooleanException) cause).getActual();
             m_displayEngine.displayParameterizedTestFail(displayName, actual, expected);
-        } else if (cause instanceof FailedCheckArrayEqualException) {
-            var expected = ((FailedCheckArrayEqualException) cause).getExpected();
-            var actual = ((FailedCheckArrayEqualException) cause).getActual();
-            m_displayEngine.displayParameterizedTestFail(displayName, expected, actual);
         } else if (cause instanceof FailedCheckEqualException) {
             var expected = ((FailedCheckEqualException) cause).getExpected();
             var actual = ((FailedCheckEqualException) cause).getActual();
@@ -88,10 +83,6 @@ final class MethodRunner implements IMethodRunner {
             var expected = ((FailedCheckBooleanException) cause).getExpected();
             var actual = ((FailedCheckBooleanException) cause).getActual();
             m_displayEngine.displayUnitTestFail(displayName, actual, expected);
-        } else if (cause instanceof FailedCheckArrayEqualException) {
-            var expected = ((FailedCheckArrayEqualException) cause).getExpected();
-            var actual = ((FailedCheckArrayEqualException) cause).getActual();
-            m_displayEngine.displayUnitTestFail(displayName, expected, actual);
         } else if (cause instanceof FailedCheckEqualException) {
             var expected = ((FailedCheckEqualException) cause).getExpected();
             var actual = ((FailedCheckEqualException) cause).getActual();
@@ -119,14 +110,13 @@ final class MethodRunner implements IMethodRunner {
         var realMethod = method.getMethod();
         var csvParameters = getParameters(realMethod).replaceAll("\\s", "").split(",");
 
-
         var paramType = realMethod.getParameterTypes()[0];
 
         Object parameter = null;
 
         try {
             realMethod.setAccessible(true);
-            for (String source : csvParameters) {
+            for (var source : csvParameters) {
                 parameter = parseParameterByType(source, paramType);
                 realMethod.invoke(constructor, parameter);
                 m_displayEngine.displayParameterizedTestSuccess(displayName, source);
