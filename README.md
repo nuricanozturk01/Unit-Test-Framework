@@ -8,7 +8,8 @@
   **"test_fw"** directory in the "src" directory, and this directory **must be marked as the "source"** Java package.
   _You can change name the _test_ package_ under the Java package as you wish.
 -
-- ![package.png](pictures%2Fpackage.png)
+- ![package](https://github.com/nuricanozturk01/Unit-Test-Framework/assets/62218588/45713e5e-b505-4e46-b055-1ba65ee3873a)
+
 
 ## Usage
 
@@ -194,12 +195,13 @@ public class MyTest {
 
 ### Test Result
 #### Success
-![1.png](..%2Fpictures%2F1.png)
+![1](https://github.com/nuricanozturk01/Unit-Test-Framework/assets/62218588/63163ee2-9cda-4a88-9d54-122a610cf0bd)
 
-![2.png](..%2Fpictures%2F2.png)
+![2](https://github.com/nuricanozturk01/Unit-Test-Framework/assets/62218588/140e83ae-0596-4ce8-be53-f603085f36b7)
 
 #### Fail
-![fail.png](..%2Fpictures%2Ffail.png)
+![fail](https://github.com/nuricanozturk01/Unit-Test-Framework/assets/62218588/e58fe064-34b8-4766-8de9-6fb221572d16)
+
 
 ### Bugs and Features
  - If you detect bug, contact me.
