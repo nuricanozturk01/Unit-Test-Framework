@@ -9,7 +9,7 @@
 package nuricanozturk.dev.display;
 
 
-public interface IDisplayEngine {
+public sealed interface IDisplayEngine permits ConsoleDisplay, GraphicalDisplay{
 
     void display(String msg);
     void displayMethod(String msg);

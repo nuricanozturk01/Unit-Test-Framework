@@ -8,8 +8,8 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.engine;
 
-@FunctionalInterface
-interface IMethodRunner
+
+sealed interface IMethodRunner permits MethodRunner
 {
     void run(MethodWrapper method, Class<?> $class, Object ctor);
 }

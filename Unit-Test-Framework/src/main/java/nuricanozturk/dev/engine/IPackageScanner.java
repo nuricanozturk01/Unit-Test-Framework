@@ -10,7 +10,7 @@ package nuricanozturk.dev.engine;
 
 import java.util.List;
 
-public interface IPackageScanner {
+public sealed interface IPackageScanner permits PackageScanner{
     List<Class<?>> getClasses();
     List<String> getPackages(String directory);
 }

@@ -8,7 +8,7 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.engine;
 
-@FunctionalInterface
-interface IMethodScanner {
+
+sealed interface IMethodScanner permits MethodScanner{
     void prepareMethodsForTest(Class<?> $class);
 }

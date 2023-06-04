@@ -8,7 +8,7 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.engine;
 
-@FunctionalInterface
-interface ITestRunner {
+
+sealed interface ITestRunner permits TestRunner {
     void run(Class<?> $class);
 }

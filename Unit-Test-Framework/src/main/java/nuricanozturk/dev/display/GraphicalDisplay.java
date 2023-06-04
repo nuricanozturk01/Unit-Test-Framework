@@ -8,7 +8,7 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.display;
 
-public class GraphicalDisplay implements IDisplayEngine {
+public final class GraphicalDisplay implements IDisplayEngine {
     public GraphicalDisplay() {
         throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
     }

@@ -8,7 +8,7 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.exception;
 
-public class FailedCheckBooleanException extends RuntimeException {
+public final class FailedCheckBooleanException extends RuntimeException {
     private Object expected;
     private Object actual;
 

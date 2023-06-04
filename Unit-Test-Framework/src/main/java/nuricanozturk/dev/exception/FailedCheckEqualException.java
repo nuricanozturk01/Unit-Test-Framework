@@ -8,7 +8,7 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.exception;
 
-public class FailedCheckEqualException extends RuntimeException {
+public final class FailedCheckEqualException extends RuntimeException {
     private Object expected;
     private Object actual;
 

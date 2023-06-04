@@ -11,10 +11,12 @@ import java.util.stream.IntStream;
 public class MyTest {
     private List<String> stringList;
     private List<Integer> integerList;
+
     @BeforeAll
     public void startMessage() {
         System.out.println("Start Test");
     }
+
     @BeforeEach
     public void setUp() {
         stringList = List.of("Nuri", "Can", "OZTURK", "Halil", "Java");
@@ -48,6 +50,7 @@ public class MyTest {
     private void test() {
         Check.checkEqual(stringList.get(0), "Nuri");
     }
+
     @AfterAll
     public void finishMessage() {
         System.out.println("Finish!");
