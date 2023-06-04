@@ -43,6 +43,11 @@ public class MyTest {
     public void isNotArmstrongNumber(int number) {
         Check.checkFalse(Armstrong.isArmstrongNumber(number));
     }
+
+    @UnitTest
+    private void test() {
+        Check.checkEqual(stringList.get(0), "Nuri");
+    }
     @AfterAll
     public void finishMessage() {
         System.out.println("Finish!");

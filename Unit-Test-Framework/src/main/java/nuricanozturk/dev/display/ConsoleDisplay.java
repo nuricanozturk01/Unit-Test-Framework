@@ -39,7 +39,7 @@ public final class ConsoleDisplay implements IDisplayEngine {
     @Override
     public void displayParameterizedTestFail(String displayName, Object expected, Object actual) {
         var failMessage = "expected: " + expected + " actual: " + actual;
-        System.out.printf("%s\t[FAIL] [%s] [%s]%s\n", Color.RED.getColor(), displayName, failMessage, Color.RESET.getColor());
+        System.out.printf("%s\t[FAIL] [%s] [%s]!%s\n", Color.RED.getColor(), displayName, failMessage, Color.RESET.getColor());
     }
 
     @Override

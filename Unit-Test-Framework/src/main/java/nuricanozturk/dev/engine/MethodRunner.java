@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------
 	FILE		: MethodRunner.java
 	AUTHOR		: Nuri Can OZTURK
-	LAST UPDATE	: 02.05.2023
+	LAST UPDATE	: 05.05.2023
 	MethodRunner class  run the method according to test types.
 	Copyleft (c) Unit-Test-Framework
 	All Rights Free
@@ -44,17 +44,15 @@ final class MethodRunner implements IMethodRunner {
             displayName = value.isBlank() || value.isEmpty() ? displayName : value;
         }
 
-
         m_displayEngine.displayMethod(displayName);
-
 
         if (method.isParameterizedTest())
             runParameterizedTest(method, ctor, displayName);
 
         else if (method.isUnitTest())
             runUnitTest(method, ctor, displayName);
-        else runMethod(method, ctor, displayName);
 
+        else runMethod(method, ctor, displayName);
     }
 
     private void runMethod(MethodWrapper method, Object ctor, String displayName) {
@@ -63,53 +61,54 @@ final class MethodRunner implements IMethodRunner {
         try {
             realMethod.invoke(ctor);
             m_displayEngine.displayUnitTestSuccess(displayName);
-        } catch (InvocationTargetException e) {
-            Throwable cause = e.getCause();
+        }
+        catch (InvocationTargetException e) {
             m_displayEngine.displayUnitTestFail(displayName, "", "");
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             throw new RuntimeException("METHOD ERROR!", e);
-        } finally {
+        }
+        finally {
             realMethod.setAccessible(false);
         }
     }
 
     private void giveMessageParameterizedTest(Throwable cause, String displayName) {
-        if (cause instanceof FailedCheckBooleanException) {
-            var expected = ((FailedCheckBooleanException) cause).getExpected();
-            var actual = ((FailedCheckBooleanException) cause).getActual();
-            m_displayEngine.displayParameterizedTestFail(displayName, actual, expected);
-        } else if (cause instanceof FailedCheckEqualException) {
-            var expected = ((FailedCheckEqualException) cause).getExpected();
-            var actual = ((FailedCheckEqualException) cause).getActual();
-            m_displayEngine.displayParameterizedTestFail(displayName, expected, actual);
-        } else throw new RuntimeException("Error on " + displayName + " method! in " + m_currentClass.getSimpleName(), cause);
+        if (cause instanceof FailedCheckBooleanException exception) // Pattern matching since Java 17
+            m_displayEngine.displayParameterizedTestFail(displayName, exception.getActual(), exception.getExpected());
+
+        else if (cause instanceof FailedCheckEqualException exception)
+            m_displayEngine.displayParameterizedTestFail(displayName, exception.getExpected(), exception.getActual());
+
+        else throw new RuntimeException("Error on " + displayName + " method! in " + m_currentClass.getSimpleName() + " on parameterized test ", cause);
 
     }
 
     private void giveMessageUnitTest(Throwable cause, String displayName) {
-        if (cause instanceof FailedCheckBooleanException) {
-            var expected = ((FailedCheckBooleanException) cause).getExpected();
-            var actual = ((FailedCheckBooleanException) cause).getActual();
-            m_displayEngine.displayUnitTestFail(displayName, actual, expected);
-        } else if (cause instanceof FailedCheckEqualException) {
-            var expected = ((FailedCheckEqualException) cause).getExpected();
-            var actual = ((FailedCheckEqualException) cause).getActual();
-            m_displayEngine.displayUnitTestFail(displayName, expected, actual);
-        } else throw new RuntimeException("Error on " + displayName + " method! in " + m_currentClass.getSimpleName(), cause);
+        if (cause instanceof FailedCheckBooleanException exception)
+            m_displayEngine.displayUnitTestFail(displayName, exception.getExpected(), exception.getActual());
 
+        else if (cause instanceof FailedCheckEqualException exception)
+            m_displayEngine.displayUnitTestFail(displayName, exception.getExpected(), exception.getActual());
+
+        else throw new RuntimeException("Error on " + displayName + " method! in " + m_currentClass.getSimpleName() + " on unit test ", cause);
     }
+
     private void runUnitTest(MethodWrapper method, Object constructor, String displayName) {
         var realMethod = method.getMethod();
         realMethod.setAccessible(true);
         try {
             realMethod.invoke(constructor);
             m_displayEngine.displayUnitTestSuccess(displayName);
-        } catch (InvocationTargetException e) {
+        }
+        catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
             giveMessageUnitTest(cause, displayName);
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             throw new RuntimeException("METHOD ERROR!", e);
-        } finally {
+        }
+        finally {
             realMethod.setAccessible(false);
         }
     }
@@ -123,18 +122,23 @@ final class MethodRunner implements IMethodRunner {
         Object parameter = null;
 
         try {
+
             realMethod.setAccessible(true);
+
             for (var source : csvParameters) {
                 parameter = parseParameterByType(source, paramType);
                 realMethod.invoke(constructor, parameter);
                 m_displayEngine.displayParameterizedTestSuccess(displayName, source);
             }
-        } catch (InvocationTargetException e) {
+        }
+        catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
             giveMessageParameterizedTest(cause, displayName);
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             throw new RuntimeException("METHOD ERROR!", e);
-        } finally {
+        }
+        finally {
             realMethod.setAccessible(false);
         }
     }
@@ -144,13 +148,11 @@ final class MethodRunner implements IMethodRunner {
         var csvSource = realMethod.getAnnotation(CsvSource.class);
 
 
-        if (csvFile != null)
-            if (!csvFile.value().isEmpty() && !csvFile.value().isBlank())
-                return m_fileReader.readFileCsvFormat(csvFile);
+        if (csvFile != null && !csvFile.value().isEmpty() && !csvFile.value().isBlank())
+            return m_fileReader.readFileCsvFormat(csvFile);
 
-        if (csvSource != null)
-            if (!csvSource.value().isEmpty() && !csvSource.value().isBlank())
-                return csvSource.value();
+        if (csvSource != null && !csvSource.value().isEmpty() && !csvSource.value().isBlank())
+            return csvSource.value();
 
         throw new SourceNotFoundException("Source not found!...");
     }
