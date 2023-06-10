@@ -198,9 +198,9 @@ public class MyTest {
 
 ### Test Result
 #### Success
-![1](https://github.com/nuricanozturk01/Unit-Test-Framework/assets/62218588/63163ee2-9cda-4a88-9d54-122a610cf0bd)
+![1](https://github.com/nuricanozturk01/Unit-Test-Framework/assets/62218588/26498caf-2a71-47d6-89e5-14c6527043aa)
 
-![2](https://github.com/nuricanozturk01/Unit-Test-Framework/assets/62218588/140e83ae-0596-4ce8-be53-f603085f36b7)
+![2](https://github.com/nuricanozturk01/Unit-Test-Framework/assets/62218588/280bc2e6-f8ae-407e-9570-8c76007d9dc9)
 
 #### Fail
 ![fail](https://github.com/nuricanozturk01/Unit-Test-Framework/assets/62218588/e58fe064-34b8-4766-8de9-6fb221572d16)
