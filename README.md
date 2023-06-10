@@ -77,9 +77,8 @@ email: **canozturk309@gmail.com**
 ## Example
 
 ```java
-
 @TestClass
-public class StackArrayTest {
+public class LinkedListTest {
     private LinkedList<String> linkedList;
 
     @BeforeEach
@@ -185,12 +184,16 @@ public class MyTest {
         Check.checkFalse(Armstrong.isArmstrongNumber(number));
     }
 
+    @UnitTest
+    private void test() {
+        Check.checkEqual(stringList.get(0), "Nuri");
+    }
+
     @AfterAll
     public void finishMessage() {
         System.out.println("Finish!");
     }
 }
-
 ```
 
 ### Test Result
