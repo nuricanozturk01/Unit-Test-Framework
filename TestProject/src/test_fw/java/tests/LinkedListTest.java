@@ -8,7 +8,7 @@ import nuricanozturk.dev.check.Check;
 import java.util.LinkedList;
 
 @TestClass
-public class StackArrayTest {
+public class LinkedListTest {
     private LinkedList<String> linkedList;
 
     @BeforeEach
