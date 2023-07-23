@@ -38,6 +38,16 @@ public class TestApplication {
 }
 ```
 
+```java
+
+@TestFrameworkApplication
+public class TestApplication {
+    public static void main(String[] args) {
+        TestFrameworkApp.run(TestApplication.class, DisplayType.GUI);
+    }
+}
+```
+
 ## You need to know about Annotations
 
 1. `@UnitTest` annotation
