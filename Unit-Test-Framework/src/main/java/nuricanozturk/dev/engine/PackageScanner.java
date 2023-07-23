@@ -12,24 +12,32 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class PackageScanner implements IPackageScanner {
-    public PackageScanner() {
+public final class PackageScanner implements IPackageScanner
+{
+    public PackageScanner()
+    {
     }
+
     @Override
-    public List<String> getPackages(String directory) {
+    public List<String> getPackages(String directory)
+    {
         var packageNames = new ArrayList<String>();
 
-        try {
+        try
+        {
             var folder = new File(directory);
             var files = folder.listFiles();
 
-            if (files != null) {
-                for (File file : files) {
-                    if (file.isDirectory()) {
+            if (files != null)
+            {
+                for (File file : files)
+                {
+                    if (file.isDirectory())
+                    {
                         var subPackageNames = getPackages(file.getPath());
                         packageNames.addAll(subPackageNames);
-                    }
-                    else if (file.isFile() && file.getName().endsWith(".java")) {
+                    } else if (file.isFile() && file.getName().endsWith(".java"))
+                    {
                         var className = file.getName().replace(".java", "");
                         var packageName = file.getParent().substring(17);
                         var fullClassName = packageName.replace("/", ".") + "." + className;
@@ -37,7 +45,8 @@ public final class PackageScanner implements IPackageScanner {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
 
@@ -45,15 +54,19 @@ public final class PackageScanner implements IPackageScanner {
     }
 
     @Override
-    public List<Class<?>> getClasses() {
+    public List<Class<?>> getClasses()
+    {
         var packages = getPackages("src/test_fw");
         var list = new ArrayList<Class<?>>();
 
-        for (String pkg : packages) {
-            try {
+        for (String pkg : packages)
+        {
+            try
+            {
                 pkg = pkg.replace("/", ".");
                 list.add(Class.forName(pkg));
-            } catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException e)
+            {
                 throw new RuntimeException(e);
             }
         }

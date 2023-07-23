@@ -14,17 +14,21 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
-public final class MethodValidator {
+public final class MethodValidator
+{
 
-    private MethodValidator() {
+    private MethodValidator()
+    {
 
     }
 
-    public static List<Method> validateMethods(List<Method> methodList) {
+    public static List<Method> validateMethods(List<Method> methodList)
+    {
         return methodList.stream().filter(MethodValidator::isValidMethod).toList();
     }
 
-    private static boolean isValidMethod(Method method) {
+    private static boolean isValidMethod(Method method)
+    {
         var annotations = Arrays.stream(method.getDeclaredAnnotations())
                 .map(annotation -> annotation.annotationType().getSimpleName())
                 .toList();

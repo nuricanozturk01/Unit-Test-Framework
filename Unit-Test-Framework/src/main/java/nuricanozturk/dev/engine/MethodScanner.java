@@ -22,20 +22,24 @@ import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-final class MethodScanner implements IMethodScanner {
+final class MethodScanner implements IMethodScanner
+{
     private final LinkedList<MethodWrapper> methodLinkedList;
 
-    public MethodScanner() {
+    public MethodScanner()
+    {
         methodLinkedList = new LinkedList<>();
     }
 
-    public LinkedList<MethodWrapper> getMethodLinkedList() {
+    public LinkedList<MethodWrapper> getMethodLinkedList()
+    {
         return methodLinkedList;
     }
 
 
     @Override
-    public void prepareMethodsForTest(Class<?> $class) {
+    public void prepareMethodsForTest(Class<?> $class)
+    {
         var methodList = MethodValidator.validateMethods(stream($class.getDeclaredMethods()).toList());
 
         var parameterizedMethods = getParameterizedMethods(methodList);
@@ -56,17 +60,24 @@ final class MethodScanner implements IMethodScanner {
         afterAllMethod.ifPresent(methodLinkedList::addLast);
     }
 
-    private void loadUnitTest(Optional<MethodWrapper> beforeEachMethod, Optional<MethodWrapper> afterEachMethod, List<Optional<MethodWrapper>> unitTestMethods) {
-        for (var method : unitTestMethods) {
+    private void loadUnitTest(Optional<MethodWrapper> beforeEachMethod, Optional<MethodWrapper> afterEachMethod,
+                              List<Optional<MethodWrapper>> unitTestMethods)
+    {
+        for (var method : unitTestMethods)
+        {
             beforeEachMethod.ifPresent(methodLinkedList::addLast);
             method.ifPresent(methodLinkedList::addLast);
             afterEachMethod.ifPresent(methodLinkedList::addLast);
         }
     }
 
-    private void loadParameterizedTest(Optional<MethodWrapper> beforeEachMethod, Optional<MethodWrapper> afterEachMethod, List<Optional<MethodWrapper>> parameterizedMethods) {
+    private void loadParameterizedTest(Optional<MethodWrapper> beforeEachMethod,
+                                       Optional<MethodWrapper> afterEachMethod,
+                                       List<Optional<MethodWrapper>> parameterizedMethods)
+    {
 
-        for (var method : parameterizedMethods) {
+        for (var method : parameterizedMethods)
+        {
             beforeEachMethod.ifPresent(methodLinkedList::addLast);
             method.ifPresent(methodLinkedList::addLast);
             afterEachMethod.ifPresent(methodLinkedList::addLast);
@@ -74,10 +85,12 @@ final class MethodScanner implements IMethodScanner {
 
     }
 
-    private List<Optional<MethodWrapper>> getParameterizedMethods(List<Method> methodList) {
+    private List<Optional<MethodWrapper>> getParameterizedMethods(List<Method> methodList)
+    {
         var list = new ArrayList<Optional<MethodWrapper>>();
 
-        for (var method : methodList) {
+        for (var method : methodList)
+        {
 
             if (method.getDeclaredAnnotations().length < 2)
                 continue;
@@ -89,7 +102,8 @@ final class MethodScanner implements IMethodScanner {
             var csvSourceAnnotation = method.getAnnotation(CsvSource.class);
 
             if (isValidParameterForParam(method) && unitAnnotation == null && paramAnnotation != null &&
-                    (csvFileAnnotation != null || csvSourceAnnotation != null)) {
+                    (csvFileAnnotation != null || csvSourceAnnotation != null))
+            {
 
                 var wrapper = new MethodWrapper(method);
                 wrapper.addAnnotation(paramAnnotation);
@@ -108,17 +122,21 @@ final class MethodScanner implements IMethodScanner {
         return list;
     }
 
-    private boolean hasParameter(Method method) {
+    private boolean hasParameter(Method method)
+    {
         return method.getParameterCount() != 0;
     }
 
-    private boolean isValidParameterForParam(Method method) {
+    private boolean isValidParameterForParam(Method method)
+    {
         return method.getParameterCount() == 1;
     }
 
 
-    private Optional<MethodWrapper> findMethodByAnnotation(List<Method> methodList, Class<? extends Annotation> ant) {
-        for (var method : methodList) {
+    private Optional<MethodWrapper> findMethodByAnnotation(List<Method> methodList, Class<? extends Annotation> ant)
+    {
+        for (var method : methodList)
+        {
 
             if (method.getDeclaredAnnotations().length == 0)
                 continue;
@@ -126,7 +144,8 @@ final class MethodScanner implements IMethodScanner {
 
             var annotation = method.getAnnotation(ant);
 
-            if (annotation != null) {
+            if (annotation != null)
+            {
                 var displayName = method.getAnnotation(DisplayName.class);
                 var wrapper = new MethodWrapper(method);
 
@@ -141,11 +160,13 @@ final class MethodScanner implements IMethodScanner {
     }
 
 
-    private List<Optional<MethodWrapper>> prepareUnitTests(List<Method> methodList) {
+    private List<Optional<MethodWrapper>> prepareUnitTests(List<Method> methodList)
+    {
 
         var list = new ArrayList<Optional<MethodWrapper>>();
 
-        for (var method : methodList) {
+        for (var method : methodList)
+        {
 
             if (method.getDeclaredAnnotations().length == 0)
                 continue;
@@ -156,7 +177,9 @@ final class MethodScanner implements IMethodScanner {
             var csvFileAnnotation = method.getAnnotation(CsvFile.class);
             var csvSourceAnnotation = method.getAnnotation(CsvSource.class);
 
-            if (!hasParameter(method) && paramAnnotation == null && csvFileAnnotation == null && csvSourceAnnotation == null && unitAnnotation != null) {
+            if (!hasParameter(
+                    method) && paramAnnotation == null && csvFileAnnotation == null && csvSourceAnnotation == null && unitAnnotation != null)
+            {
                 var wrapper = new MethodWrapper(method);
                 wrapper.addAnnotation(unitAnnotation);
 
@@ -169,7 +192,8 @@ final class MethodScanner implements IMethodScanner {
         return list;
     }
 
-    public MethodWrapper getNextMethod(int i) {
+    public MethodWrapper getNextMethod(int i)
+    {
         return methodLinkedList.removeFirst();
     }
 }

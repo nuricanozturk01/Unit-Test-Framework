@@ -8,43 +8,86 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.display;
 
-public final class GraphicalDisplay implements IDisplayEngine {
-    public GraphicalDisplay() {
+import nuricanozturk.dev.display.gui.MethodTestWrapper;
+import nuricanozturk.dev.display.gui.TestGui;
+import nuricanozturk.dev.display.gui.TestWrapper;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.String.format;
+
+public final class GraphicalDisplay implements IDisplayEngine
+{
+
+    private final List<TestWrapper> m_TestWrappers;
+    private TestWrapper m_testWrapper;
+    private MethodTestWrapper m_methodTestWrapper;
+
+    public GraphicalDisplay()
+    {
+        m_TestWrappers = new ArrayList<>();
+    }
+
+    @Override
+    public void display(String msg)
+    {
         throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
     }
 
     @Override
-    public void display(String msg) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
+    public void displayMethod(String msg)
+    {
+        m_methodTestWrapper = new MethodTestWrapper(msg);
     }
 
     @Override
-    public void displayMethod(String msg) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
+    public void displayClass(String msg)
+    {
+        m_testWrapper = new TestWrapper(msg);
     }
 
     @Override
-    public void displayClass(String msg) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
+    public void displayUnitTestSuccess(String displayName)
+    {
+        m_methodTestWrapper.addTestResultStr(format("\t[SUCCESS] Method: [%s]\n", displayName));
     }
 
     @Override
-    public void displayUnitTestSuccess(String displayName) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
+    public void displayUnitTestFail(String displayName, Object expected, Object actual)
+    {
+        var failMessage = "expected: " + expected + " actual: " + actual;
+
+        m_methodTestWrapper.addTestResultStr(format("\t[FAIL] [%s] [%s]!\n", displayName, failMessage));
     }
 
     @Override
-    public void displayUnitTestFail(String displayName, Object expected, Object actual) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
+    public void displayParameterizedTestFail(String displayName, Object expected, Object actual)
+    {
+        var failMessage = "expected: " + expected + " actual: " + actual;
+        m_methodTestWrapper.addTestResultStr(format("\t[FAIL] [%s] [%s]!\n", displayName, failMessage));
     }
 
     @Override
-    public void displayParameterizedTestFail(String displayName, Object expected, Object actual) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
+    public void displayParameterizedTestSuccess(String displayName, String msg)
+    {
+        m_methodTestWrapper.addTestResultStr(
+                format("\t[SUCCESS] Method: [%s] Parameter: [%s]\n", displayName, msg));
     }
 
-    @Override
-    public void displayParameterizedTestSuccess(String displayName, String msg) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
+    public void finishTest()
+    {
+        var m_testGui = new TestGui(m_TestWrappers);
+        m_testGui.start();
+    }
+
+    public void finishMethodTest()
+    {
+        m_testWrapper.addMethod(m_methodTestWrapper);
+    }
+
+    public void finishClassTest()
+    {
+        m_TestWrappers.add(m_testWrapper);
     }
 }
