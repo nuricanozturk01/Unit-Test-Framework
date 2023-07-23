@@ -2,6 +2,10 @@
 
  This framework allows you to create and run unit tests in Java, similar to JUnit. Below, you will find basic information and examples on how to use the Unit-Test-Framework.
 
+## Update 23/07/2023
+ - Added Gui Component.
+ - You can look at gui branch
+   
 ### Package:
 
 - Package structure must be below. This is an example Test Project. One important thing to note is that there must be a
