@@ -206,7 +206,9 @@ public class MyTest {
 ![fail](https://github.com/nuricanozturk01/Unit-Test-Framework/assets/62218588/e58fe064-34b8-4766-8de9-6fb221572d16)
 
 ### Update 23/07/2023
-- Added very basic GUI component. The main purpose here is to demonstrate that we can easily add new features to the code when desired.
+- Added very basic GUI component.
+- You can look at gui branch.
+- The main purpose here is to demonstrate that we can easily add new features to the code when desired.
 
 - ![Unit-Test Basic GUI](https://github.com/nuricanozturk01/Unit-Test-Framework/assets/62218588/fbbe3a50-0497-40d0-b471-fcb9815f202a)
 
