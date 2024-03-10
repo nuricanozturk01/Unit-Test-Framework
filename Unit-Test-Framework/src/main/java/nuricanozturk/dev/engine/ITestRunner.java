@@ -9,6 +9,9 @@
 package nuricanozturk.dev.engine;
 
 
+import nuricanozturk.dev.display.IDisplayEngine;
+
 sealed interface ITestRunner permits TestRunner {
     void run(Class<?> $class);
+    IDisplayEngine getDisplayEngine();
 }

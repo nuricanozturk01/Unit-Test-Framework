@@ -34,13 +34,13 @@ public class MyTest {
         IntStream.range(0, integerList.size()).forEach(i -> Check.checkTrue(integerList.get(i) % 2 == 0));
     }
 
-    @CsvFile("/Users/nuricanozturk/IdeaProjects/TestProject/src/main/resources/armstrong.csv")
+    @CsvFile("C:\\Users\\hp\\IdeaProjects\\Unit-Test-Framework\\TestProject\\src\\main\\resources\\armstrong.csv")
     @ParameterizedTest
     public void isArmstrongNumber(int number) {
         Check.checkTrue(Armstrong.isArmstrongNumber(number));
     }
 
-    @CsvFile("/Users/nuricanozturk/IdeaProjects/TestProject/src/main/resources/not_armstrong.csv")
+    @CsvFile("C:\\Users\\hp\\IdeaProjects\\Unit-Test-Framework\\TestProject\\src\\main\\resources\\not_armstrong.csv")
     @ParameterizedTest
     public void isNotArmstrongNumber(int number) {
         Check.checkFalse(Armstrong.isArmstrongNumber(number));

@@ -8,35 +8,48 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.engine;
 
-import nuricanozturk.dev.display.DisplayEngineFactory;
-import nuricanozturk.dev.display.DisplayType;
+import nuricanozturk.dev.display.GraphicalDisplay;
 import nuricanozturk.dev.display.IDisplayEngine;
 
 import java.util.stream.IntStream;
 
 import static nuricanozturk.dev.util.exception.ExceptionUtil.handleException;
 
-public final class TestRunner implements ITestRunner {
+public final class TestRunner implements ITestRunner
+{
     private final IDisplayEngine m_displayEngine;
     private final IMethodRunner m_methodRunner;
     private final MethodScanner m_methodScanner;
 
-    public TestRunner(DisplayType displayType) {
-        m_displayEngine = DisplayEngineFactory.createDisplay(displayType);
+    public TestRunner(IDisplayEngine displayEngine)
+    {
+        m_displayEngine = displayEngine;
         m_methodScanner = new MethodScanner();
         m_methodRunner = new MethodRunner(new FileReader(), m_displayEngine);
     }
 
+    public IDisplayEngine getDisplayEngine()
+    {
+        return m_displayEngine;
+    }
+
     @Override
-    public void run(Class<?> $class) {
+    public void run(Class<?> $class)
+    {
         m_methodScanner.prepareMethodsForTest($class);
 
         m_displayEngine.displayClass($class.getSimpleName());
 
-        var ctor = handleException(() -> $class.getDeclaredConstructor().newInstance(), "Please be sure used default ctor!...", RuntimeException.class);
+        var ctor = handleException(() -> $class.getDeclaredConstructor().newInstance(),
+                "Please be sure used default ctor!...", RuntimeException.class);
 
         IntStream.range(0, m_methodScanner.getMethodLinkedList().size())
                 .mapToObj(m_methodScanner::getNextMethod)
-                .forEach(mw -> m_methodRunner.run(mw, $class, ctor));
+                .forEach(mw -> {
+                    m_methodRunner.run(mw, $class, ctor);
+
+                    if (m_displayEngine instanceof GraphicalDisplay)
+                        ((GraphicalDisplay) m_displayEngine).finishMethodTest();
+                });
     }
 }
