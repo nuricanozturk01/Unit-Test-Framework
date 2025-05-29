@@ -8,8 +8,9 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.engine;
 
-import nuricanozturk.dev.annotation.*;
-import nuricanozturk.dev.util.validator.MethodValidator;
+import static java.util.Arrays.stream;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -18,158 +19,183 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.stream;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
+import nuricanozturk.dev.annotation.AfterAll;
+import nuricanozturk.dev.annotation.AfterEach;
+import nuricanozturk.dev.annotation.BeforeAll;
+import nuricanozturk.dev.annotation.BeforeEach;
+import nuricanozturk.dev.annotation.CsvFile;
+import nuricanozturk.dev.annotation.CsvSource;
+import nuricanozturk.dev.annotation.DisplayName;
+import nuricanozturk.dev.annotation.ParameterizedTest;
+import nuricanozturk.dev.annotation.UnitTest;
+import nuricanozturk.dev.util.validator.MethodValidator;
 
 final class MethodScanner implements IMethodScanner {
-    private final LinkedList<MethodWrapper> methodLinkedList;
+  private final LinkedList<MethodWrapper> methodLinkedList;
 
-    public MethodScanner() {
-        methodLinkedList = new LinkedList<>();
+  MethodScanner() {
+    this.methodLinkedList = new LinkedList<>();
+  }
+
+  public LinkedList<MethodWrapper> getMethodLinkedList() {
+    return this.methodLinkedList;
+  }
+
+  @Override
+  public void prepareMethodsForTest(final Class<?> cls) {
+    final var methodList =
+        MethodValidator.validateMethods(stream(cls.getDeclaredMethods()).toList());
+
+    final var parameterizedMethods = this.getParameterizedMethods(methodList);
+    final var beforeEachMethod = this.findMethodByAnnotation(methodList, BeforeEach.class);
+    final var beforeAllMethod = this.findMethodByAnnotation(methodList, BeforeAll.class);
+    final var afterEachMethod = this.findMethodByAnnotation(methodList, AfterEach.class);
+    final var afterAllMethod = this.findMethodByAnnotation(methodList, AfterAll.class);
+    final var unitTestMethods = this.prepareUnitTests(methodList);
+
+    beforeAllMethod.ifPresent(this.methodLinkedList::addFirst);
+
+    if (!parameterizedMethods.isEmpty()) {
+      this.loadParameterizedTest(beforeEachMethod, afterEachMethod, parameterizedMethods);
     }
 
-    public LinkedList<MethodWrapper> getMethodLinkedList() {
-        return methodLinkedList;
+    if (!unitTestMethods.isEmpty()) {
+      this.loadUnitTest(beforeEachMethod, afterEachMethod, unitTestMethods);
     }
 
+    afterAllMethod.ifPresent(this.methodLinkedList::addLast);
+  }
 
-    @Override
-    public void prepareMethodsForTest(Class<?> $class) {
-        var methodList = MethodValidator.validateMethods(stream($class.getDeclaredMethods()).toList());
-
-        var parameterizedMethods = getParameterizedMethods(methodList);
-        var beforeEachMethod = findMethodByAnnotation(methodList, BeforeEach.class);
-        var beforeAllMethod = findMethodByAnnotation(methodList, BeforeAll.class);
-        var afterEachMethod = findMethodByAnnotation(methodList, AfterEach.class);
-        var afterAllMethod = findMethodByAnnotation(methodList, AfterAll.class);
-        var unitTestMethods = prepareUnitTests(methodList);
-
-        beforeAllMethod.ifPresent(methodLinkedList::addFirst);
-
-        if (!parameterizedMethods.isEmpty())
-            loadParameterizedTest(beforeEachMethod, afterEachMethod, parameterizedMethods);
-
-        if (!unitTestMethods.isEmpty())
-            loadUnitTest(beforeEachMethod, afterEachMethod, unitTestMethods);
-
-        afterAllMethod.ifPresent(methodLinkedList::addLast);
+  private void loadUnitTest(
+      final Optional<MethodWrapper> beforeEachMethod,
+      final Optional<MethodWrapper> afterEachMethod,
+      final List<Optional<MethodWrapper>> unitTestMethods) {
+    for (final var method : unitTestMethods) {
+      beforeEachMethod.ifPresent(this.methodLinkedList::addLast);
+      method.ifPresent(this.methodLinkedList::addLast);
+      afterEachMethod.ifPresent(this.methodLinkedList::addLast);
     }
+  }
 
-    private void loadUnitTest(Optional<MethodWrapper> beforeEachMethod, Optional<MethodWrapper> afterEachMethod, List<Optional<MethodWrapper>> unitTestMethods) {
-        for (var method : unitTestMethods) {
-            beforeEachMethod.ifPresent(methodLinkedList::addLast);
-            method.ifPresent(methodLinkedList::addLast);
-            afterEachMethod.ifPresent(methodLinkedList::addLast);
+  private void loadParameterizedTest(
+      final Optional<MethodWrapper> beforeEachMethod,
+      final Optional<MethodWrapper> afterEachMethod,
+      final List<Optional<MethodWrapper>> parameterizedMethods) {
+
+    for (final var method : parameterizedMethods) {
+      beforeEachMethod.ifPresent(this.methodLinkedList::addLast);
+      method.ifPresent(this.methodLinkedList::addLast);
+      afterEachMethod.ifPresent(this.methodLinkedList::addLast);
+    }
+  }
+
+  private List<Optional<MethodWrapper>> getParameterizedMethods(final List<Method> methodList) {
+    final var list = new ArrayList<Optional<MethodWrapper>>();
+
+    for (final var method : methodList) {
+      if (method.getDeclaredAnnotations().length < 2) {
+        continue;
+      }
+
+      final var paramAnnotation = method.getAnnotation(ParameterizedTest.class);
+      final var unitAnnotation = method.getAnnotation(UnitTest.class);
+      final var displayAnnotation = method.getAnnotation(DisplayName.class);
+      final var csvFileAnnotation = method.getAnnotation(CsvFile.class);
+      final var csvSourceAnnotation = method.getAnnotation(CsvSource.class);
+
+      if (this.isValidParameterForParam(method)
+          && unitAnnotation == null
+          && paramAnnotation != null
+          && (csvFileAnnotation != null || csvSourceAnnotation != null)) {
+        final var wrapper = new MethodWrapper(method);
+        wrapper.addAnnotation(paramAnnotation);
+
+        if (csvFileAnnotation != null) {
+          wrapper.addAnnotation(csvFileAnnotation);
         }
-    }
-
-    private void loadParameterizedTest(Optional<MethodWrapper> beforeEachMethod, Optional<MethodWrapper> afterEachMethod, List<Optional<MethodWrapper>> parameterizedMethods) {
-
-        for (var method : parameterizedMethods) {
-            beforeEachMethod.ifPresent(methodLinkedList::addLast);
-            method.ifPresent(methodLinkedList::addLast);
-            afterEachMethod.ifPresent(methodLinkedList::addLast);
+        if (csvSourceAnnotation != null) {
+          wrapper.addAnnotation(csvSourceAnnotation);
+        }
+        if (displayAnnotation != null) {
+          wrapper.addAnnotation(displayAnnotation);
         }
 
+        wrapper.setParameterizedTest(true);
+        list.add(of(wrapper));
+      }
     }
+    return list;
+  }
 
-    private List<Optional<MethodWrapper>> getParameterizedMethods(List<Method> methodList) {
-        var list = new ArrayList<Optional<MethodWrapper>>();
+  private boolean hasParameter(final Method method) {
+    return method.getParameterCount() != 0;
+  }
 
-        for (var method : methodList) {
+  private boolean isValidParameterForParam(final Method method) {
+    return method.getParameterCount() == 1;
+  }
 
-            if (method.getDeclaredAnnotations().length < 2)
-                continue;
+  private Optional<MethodWrapper> findMethodByAnnotation(
+      final List<Method> methodList, final Class<? extends Annotation> ant) {
+    for (final var method : methodList) {
 
-            var paramAnnotation = method.getAnnotation(ParameterizedTest.class);
-            var unitAnnotation = method.getAnnotation(UnitTest.class);
-            var displayAnnotation = method.getAnnotation(DisplayName.class);
-            var csvFileAnnotation = method.getAnnotation(CsvFile.class);
-            var csvSourceAnnotation = method.getAnnotation(CsvSource.class);
+      if (method.getDeclaredAnnotations().length == 0) {
+        continue;
+      }
 
-            if (isValidParameterForParam(method) && unitAnnotation == null && paramAnnotation != null &&
-                    (csvFileAnnotation != null || csvSourceAnnotation != null)) {
+      final var annotation = method.getAnnotation(ant);
 
-                var wrapper = new MethodWrapper(method);
-                wrapper.addAnnotation(paramAnnotation);
+      if (annotation != null) {
+        final var displayName = method.getAnnotation(DisplayName.class);
+        final var wrapper = new MethodWrapper(method);
 
-                if (csvFileAnnotation != null)
-                    wrapper.addAnnotation(csvFileAnnotation);
-                if (csvSourceAnnotation != null)
-                    wrapper.addAnnotation(csvSourceAnnotation);
-                if (displayAnnotation != null)
-                    wrapper.addAnnotation(displayAnnotation);
-
-                wrapper.setParameterizedTest(true);
-                list.add(of(wrapper));
-            }
+        wrapper.addAnnotation(annotation);
+        if (displayName != null) {
+          wrapper.addAnnotation(displayName);
         }
-        return list;
+
+        return of(wrapper);
+      }
     }
+    return empty();
+  }
 
-    private boolean hasParameter(Method method) {
-        return method.getParameterCount() != 0;
-    }
+  private List<Optional<MethodWrapper>> prepareUnitTests(final List<Method> methodList) {
 
-    private boolean isValidParameterForParam(Method method) {
-        return method.getParameterCount() == 1;
-    }
+    final var list = new ArrayList<Optional<MethodWrapper>>();
 
+    for (final var method : methodList) {
 
-    private Optional<MethodWrapper> findMethodByAnnotation(List<Method> methodList, Class<? extends Annotation> ant) {
-        for (var method : methodList) {
+      if (method.getDeclaredAnnotations().length == 0) {
+        continue;
+      }
 
-            if (method.getDeclaredAnnotations().length == 0)
-                continue;
+      final var paramAnnotation = method.getAnnotation(ParameterizedTest.class);
+      final var unitAnnotation = method.getAnnotation(UnitTest.class);
+      final var displayAnnotation = method.getAnnotation(DisplayName.class);
+      final var csvFileAnnotation = method.getAnnotation(CsvFile.class);
+      final var csvSourceAnnotation = method.getAnnotation(CsvSource.class);
 
+      if (!this.hasParameter(method)
+          && paramAnnotation == null
+          && csvFileAnnotation == null
+          && csvSourceAnnotation == null
+          && unitAnnotation != null) {
+        final var wrapper = new MethodWrapper(method);
+        wrapper.addAnnotation(unitAnnotation);
 
-            var annotation = method.getAnnotation(ant);
-
-            if (annotation != null) {
-                var displayName = method.getAnnotation(DisplayName.class);
-                var wrapper = new MethodWrapper(method);
-
-                wrapper.addAnnotation(annotation);
-                if (displayName != null)
-                    wrapper.addAnnotation(displayName);
-
-                return of(wrapper);
-            }
+        if (displayAnnotation != null) {
+          wrapper.addAnnotation(displayAnnotation);
         }
-        return empty();
+
+        wrapper.setUnitTest(true);
+        list.add(of(wrapper));
+      }
     }
+    return list;
+  }
 
-
-    private List<Optional<MethodWrapper>> prepareUnitTests(List<Method> methodList) {
-
-        var list = new ArrayList<Optional<MethodWrapper>>();
-
-        for (var method : methodList) {
-
-            if (method.getDeclaredAnnotations().length == 0)
-                continue;
-
-            var paramAnnotation = method.getAnnotation(ParameterizedTest.class);
-            var unitAnnotation = method.getAnnotation(UnitTest.class);
-            var displayAnnotation = method.getAnnotation(DisplayName.class);
-            var csvFileAnnotation = method.getAnnotation(CsvFile.class);
-            var csvSourceAnnotation = method.getAnnotation(CsvSource.class);
-
-            if (!hasParameter(method) && paramAnnotation == null && csvFileAnnotation == null && csvSourceAnnotation == null && unitAnnotation != null) {
-                var wrapper = new MethodWrapper(method);
-                wrapper.addAnnotation(unitAnnotation);
-
-                if (displayAnnotation != null)
-                    wrapper.addAnnotation(displayAnnotation);
-                wrapper.setUnitTest(true);
-                list.add(of(wrapper));
-            }
-        }
-        return list;
-    }
-
-    public MethodWrapper getNextMethod(int i) {
-        return methodLinkedList.removeFirst();
-    }
+  public MethodWrapper getNextMethod(final int i) {
+    return this.methodLinkedList.removeFirst();
+  }
 }

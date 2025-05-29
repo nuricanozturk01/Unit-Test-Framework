@@ -8,9 +8,8 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.exception;
 
-public final class TestClassNotFoundException extends RuntimeException{
-
-    public TestClassNotFoundException(String message) {
-        super(message);
-    }
+public final class TestClassNotFoundException extends RuntimeException {
+  public TestClassNotFoundException(final String message) {
+    super(message);
+  }
 }

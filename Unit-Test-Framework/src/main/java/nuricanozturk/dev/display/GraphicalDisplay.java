@@ -9,42 +9,42 @@
 package nuricanozturk.dev.display;
 
 public final class GraphicalDisplay implements IDisplayEngine {
-    public GraphicalDisplay() {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
-    }
+  public GraphicalDisplay() {
+    throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
+  }
 
-    @Override
-    public void display(String msg) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
-    }
+  @Override
+  public void display(final String msg) {
+    throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
+  }
 
-    @Override
-    public void displayMethod(String msg) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
-    }
+  @Override
+  public void displayMethod(final String msg) {
+    throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
+  }
 
-    @Override
-    public void displayClass(String msg) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
-    }
+  @Override
+  public void displayClass(final String msg) {
+    throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
+  }
 
-    @Override
-    public void displayUnitTestSuccess(String displayName) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
-    }
+  @Override
+  public void displayUnitTestSuccess(final String displayName) {
+    throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
+  }
 
-    @Override
-    public void displayUnitTestFail(String displayName, Object expected, Object actual) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
-    }
+  @Override
+  public void displayUnitTestFail(final String displayName, final Object expected, final Object actual) {
+    throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
+  }
 
-    @Override
-    public void displayParameterizedTestFail(String displayName, Object expected, Object actual) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
-    }
+  @Override
+  public void displayParameterizedTestFail(final String displayName, final Object expected, final Object actual) {
+    throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
+  }
 
-    @Override
-    public void displayParameterizedTestSuccess(String displayName, String msg) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
-    }
+  @Override
+  public void displayParameterizedTestSuccess(final String displayName, final String msg) {
+    throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
+  }
 }

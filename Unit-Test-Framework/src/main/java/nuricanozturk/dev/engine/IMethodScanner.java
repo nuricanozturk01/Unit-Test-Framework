@@ -8,7 +8,6 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.engine;
 
-
-sealed interface IMethodScanner permits MethodScanner{
-    void prepareMethodsForTest(Class<?> $class);
+sealed interface IMethodScanner permits MethodScanner {
+  void prepareMethodsForTest(Class<?> cls);
 }

@@ -15,7 +15,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface DisplayName
-{
-    String value() default "";
+public @interface DisplayName {
+  String value() default "";
 }

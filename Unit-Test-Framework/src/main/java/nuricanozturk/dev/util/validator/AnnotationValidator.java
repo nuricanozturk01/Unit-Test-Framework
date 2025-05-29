@@ -12,15 +12,17 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 public final class AnnotationValidator {
-    private AnnotationValidator() {
+  private AnnotationValidator() {
 
-    }
+  }
 
-    public static boolean validateAnnotation(Method method, Class<? extends Annotation> annotation) {
-        return method.getAnnotation(annotation) != null;
-    }
+  public static boolean validateAnnotation(
+      final Method method, final Class<? extends Annotation> annotation) {
+    return method.getAnnotation(annotation) != null;
+  }
 
-    public static boolean validateAnnotation(Class<?> $class, Class<? extends Annotation> annotation) {
-        return $class.getAnnotation(annotation) != null;
-    }
+  public static boolean validateAnnotation(
+      final Class<?> cls, final Class<? extends Annotation> annotation) {
+    return cls.getAnnotation(annotation) != null;
+  }
 }

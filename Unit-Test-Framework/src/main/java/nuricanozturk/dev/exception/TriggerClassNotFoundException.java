@@ -8,9 +8,8 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.exception;
 
-public final class TriggerClassNotFoundException extends RuntimeException{
-
-    public TriggerClassNotFoundException(String message) {
-        super(message);
-    }
+public final class TriggerClassNotFoundException extends RuntimeException {
+  public TriggerClassNotFoundException(final String message) {
+    super(message);
+  }
 }

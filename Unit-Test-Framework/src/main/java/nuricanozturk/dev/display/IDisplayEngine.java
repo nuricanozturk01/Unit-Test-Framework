@@ -8,18 +8,19 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.display;
 
+public sealed interface IDisplayEngine permits ConsoleDisplay, GraphicalDisplay {
 
-public sealed interface IDisplayEngine permits ConsoleDisplay, GraphicalDisplay{
+  void display(String msg);
 
-    void display(String msg);
-    void displayMethod(String msg);
-    void displayClass(String msg);
+  void displayMethod(String msg);
 
-    void displayUnitTestSuccess(String displayName);
+  void displayClass(String msg);
 
-    void displayUnitTestFail(String displayName, Object expected, Object actual);
+  void displayUnitTestSuccess(String displayName);
 
-    void displayParameterizedTestFail(String displayName, Object expected, Object actual);
+  void displayUnitTestFail(String displayName, Object expected, Object actual);
 
-    void displayParameterizedTestSuccess(String displayName, String msg);
+  void displayParameterizedTestFail(String displayName, Object expected, Object actual);
+
+  void displayParameterizedTestSuccess(String displayName, String msg);
 }

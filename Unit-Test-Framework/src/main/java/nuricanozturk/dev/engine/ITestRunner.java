@@ -8,7 +8,6 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.engine;
 
-
 sealed interface ITestRunner permits TestRunner {
-    void run(Class<?> $class);
+  void run(Class<?> cls);
 }

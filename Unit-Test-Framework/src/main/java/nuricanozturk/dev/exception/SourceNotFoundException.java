@@ -10,7 +10,7 @@
 package nuricanozturk.dev.exception;
 
 public final class SourceNotFoundException extends RuntimeException {
-    public SourceNotFoundException(String message) {
-        super(message);
-    }
+  public SourceNotFoundException(final String message) {
+    super(message);
+  }
 }

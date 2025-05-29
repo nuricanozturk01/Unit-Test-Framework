@@ -8,7 +8,7 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.display;
 
-public enum DisplayType
-{
-    Console, GUI
+public enum DisplayType {
+  Console,
+  GUI
 }

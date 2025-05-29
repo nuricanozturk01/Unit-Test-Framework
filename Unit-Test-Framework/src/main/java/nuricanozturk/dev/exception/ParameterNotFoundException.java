@@ -9,7 +9,7 @@
 package nuricanozturk.dev.exception;
 
 public final class ParameterNotFoundException extends RuntimeException {
-    public ParameterNotFoundException(String message) {
-        super(message);
-    }
+  public ParameterNotFoundException(final String message) {
+    super(message);
+  }
 }

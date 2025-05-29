@@ -9,23 +9,23 @@
 package nuricanozturk.dev.exception;
 
 public final class FailedCheckEqualException extends RuntimeException {
-    private Object expected;
-    private Object actual;
+  private Object expected;
+  private Object actual;
 
-    public FailedCheckEqualException(String message) {
-        super(message);
-    }
+  public FailedCheckEqualException(final String message) {
+    super(message);
+  }
 
-    public <T> FailedCheckEqualException(T expected, T actual) {
-        this.expected = expected;
-        this.actual = actual;
-    }
+  public <T> FailedCheckEqualException(final T expected, final T actual) {
+    this.expected = expected;
+    this.actual = actual;
+  }
 
-    public Object getExpected() {
-        return expected;
-    }
+  public Object getExpected() {
+    return this.expected;
+  }
 
-    public Object getActual() {
-        return actual;
-    }
+  public Object getActual() {
+    return this.actual;
+  }
 }

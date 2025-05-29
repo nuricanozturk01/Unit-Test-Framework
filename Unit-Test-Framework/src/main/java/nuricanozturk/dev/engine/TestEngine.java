@@ -8,56 +8,57 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.engine;
 
+import java.util.List;
 import nuricanozturk.dev.annotation.TestClass;
 import nuricanozturk.dev.exception.TestClassNotFoundException;
 
-import java.util.List;
-
 public final class TestEngine implements IEngine {
-    private IPackageScanner m_packageScanner;
-    private ITestRunner m_testRunner;
+  private IPackageScanner packageScanner;
+  private ITestRunner testRunner;
 
-    private TestEngine() {
+  private TestEngine() {
+
+  }
+
+  @Override
+  public void startTest() {
+    final var annotatedClasses = this.decomposeHasTestClassAnnotationClasses();
+    annotatedClasses.forEach(this.testRunner::run);
+  }
+
+  @Override
+  public List<Class<?>> decomposeHasTestClassAnnotationClasses() {
+    final var annotatedClasses =
+        this.packageScanner.getClasses().stream()
+            .filter(cl -> cl.getAnnotation(TestClass.class) != null)
+            .toList();
+
+    if (annotatedClasses.isEmpty()) {
+      throw new TestClassNotFoundException("Test classes not found!");
     }
 
-    @Override
-    public void startTest() {
-        var annotatedClasses = decomposeHasTestClassAnnotationClasses();
-        annotatedClasses.forEach(m_testRunner::run);
+    return annotatedClasses;
+  }
+
+  public static class Builder {
+    private final TestEngine testEngine;
+
+    public Builder() {
+      this.testEngine = new TestEngine();
     }
 
-    @Override
-    public List<Class<?>> decomposeHasTestClassAnnotationClasses() {
-        var annotatedClasses = m_packageScanner.getClasses()
-                .stream()
-                .filter(cl -> cl.getAnnotation(TestClass.class) != null)
-                .toList();
-
-        if (annotatedClasses.isEmpty())
-            throw new TestClassNotFoundException("Test classes not found!");
-
-        return annotatedClasses;
+    public Builder setPackageScanner(final IPackageScanner packageScanner) {
+      this.testEngine.packageScanner = packageScanner;
+      return this;
     }
 
-    public static class Builder {
-        private final TestEngine m_testEngine;
-
-        public Builder() {
-            m_testEngine = new TestEngine();
-        }
-
-        public Builder setPackageScanner(IPackageScanner packageScanner) {
-            m_testEngine.m_packageScanner = packageScanner;
-            return this;
-        }
-
-        public Builder setTestRunner(ITestRunner testRunner) {
-            m_testEngine.m_testRunner = testRunner;
-            return this;
-        }
-
-        public TestEngine build() {
-            return m_testEngine;
-        }
+    public Builder setTestRunner(final ITestRunner testRunner) {
+      this.testEngine.testRunner = testRunner;
+      return this;
     }
+
+    public TestEngine build() {
+      return this.testEngine;
+    }
+  }
 }

@@ -8,8 +8,6 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.engine;
 
-
-sealed interface IMethodRunner permits MethodRunner
-{
-    void run(MethodWrapper method, Class<?> $class, Object ctor);
+sealed interface IMethodRunner permits MethodRunner {
+  void run(MethodWrapper method, Class<?> cls, Object ctor);
 }

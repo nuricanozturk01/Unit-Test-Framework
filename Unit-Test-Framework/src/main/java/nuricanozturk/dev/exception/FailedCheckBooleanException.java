@@ -9,26 +9,27 @@
 package nuricanozturk.dev.exception;
 
 public final class FailedCheckBooleanException extends RuntimeException {
-    private Object expected;
-    private Object actual;
+  private Object expected;
+  private Object actual;
 
-    public FailedCheckBooleanException() {
+  public FailedCheckBooleanException() {
 
-    }
-    public FailedCheckBooleanException(String message) {
-        super(message);
-    }
+  }
 
-    public <T> FailedCheckBooleanException(T expected, T actual) {
-        this.expected = expected;
-        this.actual = actual;
-    }
+  public FailedCheckBooleanException(final String message) {
+    super(message);
+  }
 
-    public Object getExpected() {
-        return expected;
-    }
+  public <T> FailedCheckBooleanException(final T expected, final T actual) {
+    this.expected = expected;
+    this.actual = actual;
+  }
 
-    public Object getActual() {
-        return actual;
-    }
+  public Object getExpected() {
+    return this.expected;
+  }
+
+  public Object getActual() {
+    return this.actual;
+  }
 }

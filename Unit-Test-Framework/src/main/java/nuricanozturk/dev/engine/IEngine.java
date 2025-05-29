@@ -10,8 +10,8 @@ package nuricanozturk.dev.engine;
 
 import java.util.List;
 
-sealed interface IEngine permits TestEngine{
+sealed interface IEngine permits TestEngine {
+  void startTest();
 
-    void startTest();
-    List<Class<?>> decomposeHasTestClassAnnotationClasses();
+  List<Class<?>> decomposeHasTestClassAnnotationClasses();
 }

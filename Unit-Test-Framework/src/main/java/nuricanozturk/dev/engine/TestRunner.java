@@ -8,35 +8,38 @@
 ----------------------------------------------------------------*/
 package nuricanozturk.dev.engine;
 
+import static nuricanozturk.dev.util.exception.ExceptionUtil.handleException;
+
+import java.util.stream.IntStream;
 import nuricanozturk.dev.display.DisplayEngineFactory;
 import nuricanozturk.dev.display.DisplayType;
 import nuricanozturk.dev.display.IDisplayEngine;
 
-import java.util.stream.IntStream;
-
-import static nuricanozturk.dev.util.exception.ExceptionUtil.handleException;
-
 public final class TestRunner implements ITestRunner {
-    private final IDisplayEngine m_displayEngine;
-    private final IMethodRunner m_methodRunner;
-    private final MethodScanner m_methodScanner;
+  private final IDisplayEngine displayEngine;
+  private final IMethodRunner methodRunner;
+  private final MethodScanner methodScanner;
 
-    public TestRunner(DisplayType displayType) {
-        m_displayEngine = DisplayEngineFactory.createDisplay(displayType);
-        m_methodScanner = new MethodScanner();
-        m_methodRunner = new MethodRunner(new FileReader(), m_displayEngine);
-    }
+  public TestRunner(final DisplayType displayType) {
+    this.displayEngine = DisplayEngineFactory.createDisplay(displayType);
+    this.methodScanner = new MethodScanner();
+    this.methodRunner = new MethodRunner(new FileReader(), this.displayEngine);
+  }
 
-    @Override
-    public void run(Class<?> $class) {
-        m_methodScanner.prepareMethodsForTest($class);
+  @Override
+  public void run(final Class<?> cls) {
+    this.methodScanner.prepareMethodsForTest(cls);
 
-        m_displayEngine.displayClass($class.getSimpleName());
+    this.displayEngine.displayClass(cls.getSimpleName());
 
-        var ctor = handleException(() -> $class.getDeclaredConstructor().newInstance(), "Please be sure used default ctor!...", RuntimeException.class);
+    final var ctor =
+        handleException(
+            () -> cls.getDeclaredConstructor().newInstance(),
+            "Please be sure used default ctor!...",
+            RuntimeException.class);
 
-        IntStream.range(0, m_methodScanner.getMethodLinkedList().size())
-                .mapToObj(m_methodScanner::getNextMethod)
-                .forEach(mw -> m_methodRunner.run(mw, $class, ctor));
-    }
+    IntStream.range(0, this.methodScanner.getMethodLinkedList().size())
+        .mapToObj(this.methodScanner::getNextMethod)
+        .forEach(mw -> this.methodRunner.run(mw, cls, ctor));
+  }
 }

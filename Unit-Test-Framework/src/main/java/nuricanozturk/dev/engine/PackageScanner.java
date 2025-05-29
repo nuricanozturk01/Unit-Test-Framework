@@ -13,50 +13,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class PackageScanner implements IPackageScanner {
-    public PackageScanner() {
-    }
-    @Override
-    public List<String> getPackages(String directory) {
-        var packageNames = new ArrayList<String>();
+  @Override
+  public List<String> getPackages(final String directory) {
+    final var packageNames = new ArrayList<String>();
+    try {
+      final var folder = new File(directory);
+      final var files = folder.listFiles();
 
-        try {
-            var folder = new File(directory);
-            var files = folder.listFiles();
-
-            if (files != null) {
-                for (File file : files) {
-                    if (file.isDirectory()) {
-                        var subPackageNames = getPackages(file.getPath());
-                        packageNames.addAll(subPackageNames);
-                    }
-                    else if (file.isFile() && file.getName().endsWith(".java")) {
-                        var className = file.getName().replace(".java", "");
-                        var packageName = file.getParent().substring(17);
-                        var fullClassName = packageName.replace("/", ".") + "." + className;
-                        packageNames.add(fullClassName);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+      if (files != null) {
+        for (final File file : files) {
+          if (file.isDirectory()) {
+            final var subPackageNames = this.getPackages(file.getPath());
+            packageNames.addAll(subPackageNames);
+          } else if (file.isFile() && file.getName().endsWith(".java")) {
+            final var className = file.getName().replace(".java", "");
+            final var packageName = file.getParent().substring(17);
+            final var fullClassName = packageName.replace("/", ".") + "." + className;
+            packageNames.add(fullClassName);
+          }
         }
-
-        return packageNames;
+      }
+    } catch (final Exception e) {
+      e.printStackTrace();
     }
 
-    @Override
-    public List<Class<?>> getClasses() {
-        var packages = getPackages("src/test_fw");
-        var list = new ArrayList<Class<?>>();
+    return packageNames;
+  }
 
-        for (String pkg : packages) {
-            try {
-                pkg = pkg.replace("/", ".");
-                list.add(Class.forName(pkg));
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return list;
+  @Override
+  public List<Class<?>> getClasses() {
+    final var packages = this.getPackages("src/test_fw");
+    final var list = new ArrayList<Class<?>>();
+
+    for (String pkg : packages) {
+      try {
+        pkg = pkg.replace("/", ".");
+        list.add(Class.forName(pkg));
+      } catch (final ClassNotFoundException e) {
+        throw new RuntimeException(e);
+      }
     }
+    return list;
+  }
 }
