@@ -24,9 +24,7 @@ public final class MethodValidator {
   private static final int THREE = 3;
   private static final int TWO = 2;
 
-  private MethodValidator() {
-
-  }
+  private MethodValidator() {}
 
   public static List<Method> validateMethods(final List<Method> methodList) {
     return methodList.stream().filter(MethodValidator::isValidMethod).toList();

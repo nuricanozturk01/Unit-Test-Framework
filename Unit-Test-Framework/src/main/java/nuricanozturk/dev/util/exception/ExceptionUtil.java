@@ -12,9 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.function.Consumer;
 
 public final class ExceptionUtil {
-  private ExceptionUtil() {
-
-  }
+  private ExceptionUtil() {}
 
   private static <T extends RuntimeException> void throwException(
       final String msg, final Class<T> cls, final Throwable ex) {

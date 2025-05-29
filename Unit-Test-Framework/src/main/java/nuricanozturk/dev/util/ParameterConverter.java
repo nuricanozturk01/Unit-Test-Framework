@@ -9,9 +9,7 @@
 package nuricanozturk.dev.util;
 
 public final class ParameterConverter {
-  private ParameterConverter() {
-
-  }
+  private ParameterConverter() {}
 
   public static Object parseParameterByType(final String source, final Class<?> paramType) {
     if (paramType.equals(String.class)) {

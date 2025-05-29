@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-
 import nuricanozturk.dev.annotation.AfterAll;
 import nuricanozturk.dev.annotation.AfterEach;
 import nuricanozturk.dev.annotation.BeforeAll;

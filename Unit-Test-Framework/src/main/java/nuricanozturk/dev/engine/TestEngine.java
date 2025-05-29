@@ -16,9 +16,7 @@ public final class TestEngine implements IEngine {
   private IPackageScanner packageScanner;
   private ITestRunner testRunner;
 
-  private TestEngine() {
-
-  }
+  private TestEngine() {}
 
   @Override
   public void startTest() {

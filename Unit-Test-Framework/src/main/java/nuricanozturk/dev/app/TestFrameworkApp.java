@@ -18,9 +18,7 @@ import nuricanozturk.dev.engine.TestRunner;
 import nuricanozturk.dev.exception.TriggerClassNotFoundException;
 
 public final class TestFrameworkApp {
-  private TestFrameworkApp() {
-
-  }
+  private TestFrameworkApp() {}
 
   public static void run(final Class<?> cls, final DisplayType displayType) {
     if (!validateAnnotation(cls, TestFrameworkApplication.class)) {

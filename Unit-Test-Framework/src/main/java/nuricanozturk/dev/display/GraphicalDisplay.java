@@ -34,12 +34,14 @@ public final class GraphicalDisplay implements IDisplayEngine {
   }
 
   @Override
-  public void displayUnitTestFail(final String displayName, final Object expected, final Object actual) {
+  public void displayUnitTestFail(
+      final String displayName, final Object expected, final Object actual) {
     throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
   }
 
   @Override
-  public void displayParameterizedTestFail(final String displayName, final Object expected, final Object actual) {
+  public void displayParameterizedTestFail(
+      final String displayName, final Object expected, final Object actual) {
     throw new UnsupportedOperationException("NOT IMPLEMENTED YET!");
   }
 

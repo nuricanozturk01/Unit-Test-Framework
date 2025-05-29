@@ -12,9 +12,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 public final class AnnotationValidator {
-  private AnnotationValidator() {
-
-  }
+  private AnnotationValidator() {}
 
   public static boolean validateAnnotation(
       final Method method, final Class<? extends Annotation> annotation) {

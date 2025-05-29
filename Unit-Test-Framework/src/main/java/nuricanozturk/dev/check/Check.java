@@ -16,9 +16,7 @@ import nuricanozturk.dev.exception.FailedCheckEqualException;
 public final class Check {
   private static final double DEFAULT_DELTA = .0014;
 
-  private Check() {
-
-  }
+  private Check() {}
 
   public static void checkEqual(final byte expected, final byte actual) {
     if (expected != actual) {

@@ -12,9 +12,7 @@ public final class FailedCheckBooleanException extends RuntimeException {
   private Object expected;
   private Object actual;
 
-  public FailedCheckBooleanException() {
-
-  }
+  public FailedCheckBooleanException() {}
 
   public FailedCheckBooleanException(final String message) {
     super(message);

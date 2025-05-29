@@ -33,7 +33,8 @@ public final class ConsoleDisplay implements IDisplayEngine {
   }
 
   @Override
-  public void displayUnitTestFail(final String displayName, final Object expected, final Object actual) {
+  public void displayUnitTestFail(
+      final String displayName, final Object expected, final Object actual) {
     final var failMessage = "expected: " + expected + " actual: " + actual;
     System.out.printf(
         "%s\t[FAIL] [%s] [%s]!%s\n",
@@ -41,7 +42,8 @@ public final class ConsoleDisplay implements IDisplayEngine {
   }
 
   @Override
-  public void displayParameterizedTestFail(final String displayName, final Object expected, final Object actual) {
+  public void displayParameterizedTestFail(
+      final String displayName, final Object expected, final Object actual) {
     final var failMessage = "expected: " + expected + " actual: " + actual;
     System.out.printf(
         "%s\t[FAIL] [%s] [%s]!%s\n",
