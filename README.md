@@ -15,21 +15,36 @@
 - ![package](https://github.com/nuricanozturk01/Unit-Test-Framework/assets/62218588/45713e5e-b505-4e46-b055-1ba65ee3873a)
 
 
-## Usage
+## ☁️ Maven Usage
 
-1. Firstly, you should install project to local using maven then add the Unit-Test-Framework library to your project.
+This framework is published on **Repsy**. You can easily use it in your Maven project by adding the following dependency
+and repository definition:
 
-   ```` 
-        <dependency>
-            <groupId>nuricanozturk.dev</groupId>
-            <artifactId>Unit-Test-Framework</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-   ````
+### 📦 Dependency
 
-2. Create Test class and annotate with `@TestFrameworkApplication` and in main method,you should
-   call`TestFrameworkApp.run(TestApplication.class, DisplayType.Console)`. You can see an example below.
+```xml
 
+<dependency>
+    <groupId>nuricanozturk.dev</groupId>
+    <artifactId>Unit-Test-Framework</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+### 🗂️ Repository
+
+```xml
+
+<repositories>
+    <repository>
+        <id>repsy</id>
+        <name>My Private Maven Repository on Repsy</name>
+        <url>https://repo.repsy.io/mvn/nuricanozturk/unit-test-framework</url>
+    </repository>
+</repositories>
+```
+
+> **Note:** Place the `<dependency>` and `<repository>` blocks inside the `<project>` section of your `pom.xml` file.
 ##### Trigger Method
 
 ```java
